@@ -17,6 +17,7 @@ body {
   box-shadow: 0 0 20px #000;
   text-align: center;
   color: #f0eac6;
+  position: relative;
 }
 
 h1 {
@@ -76,11 +77,14 @@ button:hover {
   border: 1px solid #ccc;
   max-height: 150px;
   overflow-y: auto;
-  text-align: left;
   border-radius: 5px;
-  position: relative;
-  z-index: 10;
   margin-top: 5px;
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: left;
+  z-index: 10;
+  position: relative;
 }
 
 #suggestions li {
