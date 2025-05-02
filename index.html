@@ -39,7 +39,7 @@
 </head>
 <body>
   <h1>🎙️ Qui parle ?</h1>
-  <div class="quote" id="quote"></div>
+  <div class="quote" id="quote">Chargement de la citation...</div>
   <input type="text" id="guess" placeholder="Entrez un nom..." />
   <button onclick="checkAnswer()">Valider</button>
   <button id="share" onclick="shareResult()">📤 Partager</button>
@@ -77,7 +77,11 @@
     const dailyIndex = getDailyIndex();
     const chosen = characters[dailyIndex];
 
-    document.getElementById("quote").textContent = `"${chosen.quote}"`;
+    // Affiche la citation du jour
+    window.onload = () => {
+      const quoteElem = document.getElementById("quote");
+      quoteElem.textContent = `"${chosen.quote}"`;
+    };
 
     function checkAnswer() {
       const inputField = document.getElementById("guess");
@@ -88,3 +92,25 @@
       if (input === correct) {
         result.textContent = "✅ Bravo, bonne réponse !";
         result.style.color = "lime";
+        inputField.disabled = true;
+        document.querySelector("button").disabled = true;
+        document.getElementById("share").style.display = "inline-block";
+      } else {
+        result.textContent = "❌ Mauvaise réponse, essaie encore.";
+        result.style.color = "red";
+      }
+    }
+
+    function shareResult() {
+      const today = new Date().toISOString().split("T")[0];
+      const shareText = `🦜 Sea of Thieves - Qui parle ? (${today})\nJ'ai deviné la phrase du jour ! ⚓\nhttps://yubeldark.github.io/sotwebsite/`;
+
+      navigator.clipboard.writeText(shareText).then(() => {
+        alert("Résultat copié dans le presse-papier !");
+      }, () => {
+        alert("Impossible de copier le texte.");
+      });
+    }
+  </script>
+</body>
+</html>
