@@ -98,7 +98,7 @@
 
     function shareResult() {
       const today = new Date().toISOString().split("T")[0];
-      const shareText = `🦜 Sea of Thieves - Qui parle ? (${today})\nJ'ai deviné la phrase du jour ! ⚓\nhttps://tonpseudo.github.io/qui-parle/`;
+      const shareText = `🦜 Sea of Thieves - Qui parle ? (${today})\nJ'ai deviné la phrase du jour ! ⚓\nhttps://tonpseudo.github.io/sotwebsite/`;
 
       navigator.clipboard.writeText(shareText).then(() => {
         alert("Résultat copié dans le presse-papier !");
