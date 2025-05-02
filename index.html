@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Qui parle ? - Sea of Thieves</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 2em;
+      background: #121212;
+      color: white;
+      max-width: 600px;
+      margin: auto;
+    }
+    input, button {
+      padding: 0.5em;
+      font-size: 1em;
+      margin-top: 0.5em;
+    }
+    .quote {
+      margin-bottom: 1em;
+      font-style: italic;
+      font-size: 1.2em;
+    }
+    .result {
+      margin-top: 1em;
+      font-weight: bold;
+    }
+    button#share {
+      margin-left: 0.5em;
+      background-color: #1f8b4c;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎙️ Qui parle ?</h1>
+  <div class="quote" id="quote"></div>
+  <input type="text" id="guess" placeholder="Entrez un nom..." />
+  <button onclick="checkAnswer()">Valider</button>
+  <button id="share" onclick="shareResult()">📤 Partager</button>
+  <div class="result" id="result"></div>
+
+  <script>
+    const characters = [
+      {
+        name: "Merrick",
+        quote: "I've lost my legs twice. Once to a shark, and once to grog."
+      },
+      {
+        name: "The Mysterious Stranger",
+        quote: "You’re not the first to seek the secrets of the Sea of Thieves."
+      },
+      {
+        name: "Larinna",
+        quote: "I’ve got work for someone of your… talents."
+      },
+      {
+        name: "Wonda",
+        quote: "You break it, you buy it!"
+      }
+    ];
+
+    function getDailyIndex() {
+      const startDate = new Date("2024-01-01");
+      const today = new Date();
+      today.setHours(0, 0, 0, 0); // reset heure
+      const diffTime = today - startDate;
+      const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+      return diffDays % characters.length;
+    }
+
+    const dailyIndex = getDailyIndex();
+    const chosen = characters[dailyIndex];
+
+    document.getElementById("quote").textContent = `"${chosen.quote}"`;
+
+    function checkAnswer() {
+      const inputField = document.getElementById("guess");
+      const input = inputField.value.trim().toLowerCase();
+      const correct = chosen.name.toLowerCase();
+      const result = document.getElementById("result");
+
+      if (input === correct) {
+        result.textContent = "✅ Bravo, bonne réponse !";
+        result.style.color = "lime";
+        inputField.disabled = true;
+        document.querySelector("button").disabled = true;
+        document.getElementById("share").style.display = "inline-block";
+      } else {
+        result.textContent = "❌ Mauvaise réponse, essaie encore.";
+        result.style.color = "red";
+      }
+    }
+
+    function shareResult() {
+      const today = new Date().toISOString().split("T")[0];
+      const shareText = `🦜 Sea of Thieves - Qui parle ? (${today})\nJ'ai deviné la phrase du jour ! ⚓\nhttps://tonpseudo.github.io/qui-parle/`;
+
+      navigator.clipboard.writeText(shareText).then(() => {
+        alert("Résultat copié dans le presse-papier !");
+      }, () => {
+        alert("Impossible de copier le texte.");
+      });
+    }
+  </script>
+</body>
+</html>
