@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Qui parle ? - Sea of Thieves</title>
   <link rel="icon" href="favicon.ico" type="image/x-icon" />
   <style>
@@ -35,6 +35,11 @@
       border-radius: 4px;
       display: none;
     }
+    #cooldown {
+      margin-top: 1em;
+      color: #cccccc;
+      font-size: 0.9em;
+    }
   </style>
 </head>
 <body>
@@ -44,6 +49,7 @@
   <button onclick="checkAnswer()">Valider</button>
   <button id="share" onclick="shareResult()">📤 Partager</button>
   <div class="result" id="result"></div>
+  <div id="cooldown"></div>
 
   <script>
     const characters = [
@@ -76,28 +82,42 @@
 
     const dailyIndex = getDailyIndex();
     const chosen = characters[dailyIndex];
+    const quoteElem = document.getElementById("quote");
+    const inputField = document.getElementById("guess");
+    const resultElem = document.getElementById("result");
+    const shareBtn = document.getElementById("share");
+    const cooldownElem = document.getElementById("cooldown");
 
-    // Affiche la citation du jour
     window.onload = () => {
-      const quoteElem = document.getElementById("quote");
       quoteElem.textContent = `"${chosen.quote}"`;
+
+      const todayKey = new Date().toISOString().split("T")[0];
+      const alreadyGuessed = localStorage.getItem("sot-guess") === todayKey;
+
+      if (alreadyGuessed) {
+        lockGame();
+      }
+
+      startCountdown();
     };
 
     function checkAnswer() {
-      const inputField = document.getElementById("guess");
       const input = inputField.value.trim().toLowerCase();
       const correct = chosen.name.toLowerCase();
-      const result = document.getElementById("result");
 
       if (input === correct) {
-        result.textContent = "✅ Bravo, bonne réponse !";
-        result.style.color = "lime";
+        resultElem.textContent = "✅ Bravo, bonne réponse !";
+        resultElem.style.color = "lime";
         inputField.disabled = true;
         document.querySelector("button").disabled = true;
-        document.getElementById("share").style.display = "inline-block";
+        shareBtn.style.display = "inline-block";
+
+        const todayKey = new Date().toISOString().split("T")[0];
+        localStorage.setItem("sot-guess", todayKey);
+        startCountdown();
       } else {
-        result.textContent = "❌ Mauvaise réponse, essaie encore.";
-        result.style.color = "red";
+        resultElem.textContent = "❌ Mauvaise réponse, essaie encore.";
+        resultElem.style.color = "red";
       }
     }
 
@@ -107,9 +127,26 @@
 
       navigator.clipboard.writeText(shareText).then(() => {
         alert("Résultat copié dans le presse-papier !");
-      }, () => {
-        alert("Impossible de copier le texte.");
       });
+    }
+
+    function lockGame() {
+      resultElem.textContent = "🔒 Vous avez déjà répondu aujourd’hui.";
+      resultElem.style.color = "#cccccc";
+      inputField.disabled = true;
+      document.querySelector("button").disabled = true;
+    }
+
+    function startCountdown() {
+      const now = new Date();
+      const midnight = new Date();
+      midnight.setHours(24, 0, 0, 0);
+      const diff = midnight - now;
+
+      const hours = String(Math.floor(diff / 1000 / 60 / 60)).padStart(2, "0");
+      const minutes = String(Math.floor((diff / 1000 / 60) % 60)).padStart(2, "0");
+
+      cooldownElem.textContent = `⏳ Prochaine question dans ${hours}:${minutes}`;
     }
   </script>
 </body>
