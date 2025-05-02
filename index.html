@@ -12,7 +12,8 @@
     <div class="quote-box">
       <div class="quote" id="quote">Chargement de la citation...</div>
     </div>
-    <input type="text" id="guess" placeholder="Entrez un nom..." />
+    <input type="text" id="guess" placeholder="Entrez un nom..." autocomplete="off" />
+    <ul id="suggestions"></ul>
     <div class="buttons">
       <button onclick="checkAnswer()">Valider</button>
       <button id="share" onclick="shareResult()">📤 Partager</button>
@@ -57,6 +58,7 @@
     const resultElem = document.getElementById("result");
     const shareBtn = document.getElementById("share");
     const cooldownElem = document.getElementById("cooldown");
+    const suggestions = document.getElementById("suggestions");
 
     window.onload = () => {
       quoteElem.textContent = `"${chosen.quote}"`;
@@ -70,6 +72,34 @@
 
       startCountdown();
     };
+
+    inputField.addEventListener("input", () => {
+      const input = inputField.value.trim().toLowerCase();
+      suggestions.innerHTML = "";
+
+      if (input.length < 1) return;
+
+      const matches = characters
+        .map(c => c.name)
+        .filter(name => name.toLowerCase().startsWith(input))
+        .slice(0, 5);
+
+      matches.forEach(name => {
+        const li = document.createElement("li");
+        li.textContent = name;
+        li.onclick = () => {
+          inputField.value = name;
+          suggestions.innerHTML = "";
+        };
+        suggestions.appendChild(li);
+      });
+    });
+
+    document.addEventListener("click", (e) => {
+      if (e.target !== inputField) {
+        suggestions.innerHTML = "";
+      }
+    });
 
     function checkAnswer() {
       const input = inputField.value.trim().toLowerCase();
@@ -114,16 +144,4 @@
         midnight.setHours(24, 0, 0, 0);
         const diff = midnight - now;
 
-        const hours = String(Math.floor(diff / 1000 / 60 / 60)).padStart(2, "0");
-        const minutes = String(Math.floor((diff / 1000 / 60) % 60)).padStart(2, "0");
-        const seconds = String(Math.floor((diff / 1000) % 60)).padStart(2, "0");
-
-        cooldownElem.textContent = `⏳ Prochaine question dans ${hours}:${minutes}:${seconds}`;
-      }
-
-      updateTimer();
-      setInterval(updateTimer, 1000);
-    }
-  </script>
-</body>
-</html>
+        const hours = String
