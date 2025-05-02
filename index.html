@@ -1,10 +1,11 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
   <title>Qui parle ? - Sea of Thieves</title>
   <link rel="stylesheet" href="style.css" />
-  <link rel="icon" href="favicon.ico" type="image/x-icon" />
+  <link rel="icon" href="images/favicon.ico" type="image/x-icon" />
 </head>
 <body>
   <div class="container">
@@ -83,7 +84,14 @@
 
         matches.forEach(name => {
           const li = document.createElement("li");
-          li.textContent = name;
+          const img = document.createElement("img");
+          const imgName = name.toLowerCase().replace(/\s/g, "-");
+          img.src = `images/${imgName}.png`;
+          img.alt = name;
+          img.className = "suggestion-img";
+
+          li.appendChild(img);
+          li.appendChild(document.createTextNode(name));
           li.onclick = () => {
             inputField.value = name;
             suggestions.innerHTML = "";
@@ -122,8 +130,11 @@
 
       function lockGame() {
         resultElem.textContent = "🔒 Vous avez déjà répondu aujourd’hui.";
-        resultElem.style.color = "#cccccc";
+        resultElem.style.color = "#fcefb4";
         inputField.disabled = true;
+        inputField.placeholder = "Réponse déjà donnée";
+        inputField.style.backgroundColor = "#eee7c9";
+        inputField.style.cursor = "not-allowed";
         document.querySelector("button").disabled = true;
         shareBtn.style.display = "none";
       }
