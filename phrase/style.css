@@ -1,3 +1,4 @@
+
 body {
   margin: 0;
   padding: 0;
@@ -5,93 +6,83 @@ body {
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
-  font-family: "Georgia", serif;
+  font-family: 'Georgia', serif;
+  color: #fffbe0;
 }
 
 .container {
-  background-color: rgba(0, 0, 0, 0.7);
-  margin: 4em auto;
-  padding: 2em;
   max-width: 600px;
+  margin: 10vh auto;
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 2em;
   border-radius: 15px;
-  box-shadow: 0 0 20px #000;
+  box-shadow: 0 0 15px #000;
   text-align: center;
-  color: #f0eac6;
-  position: relative;
 }
 
 h1 {
-  margin-top: 0;
-  font-size: 2em;
+  font-size: 2.2em;
+  margin-bottom: 0.5em;
 }
 
 .quote-box {
-  background-color: rgba(255, 244, 210, 0.9);
-  border: 3px solid #8b5a2b;
+  background-color: #f5e6b3;
   padding: 1em;
+  border-radius: 8px;
   margin-bottom: 1em;
-  border-radius: 12px;
   font-style: italic;
-  color: #333;
+  border: 2px solid #d5a253;
 }
 
-input[type="text"] {
-  padding: 0.5em;
-  width: 80%;
+input,
+input::placeholder {
   font-size: 1em;
-  border-radius: 5px;
+  padding: 0.6em;
+  width: 80%;
+  border-radius: 6px;
   border: 1px solid #ccc;
-  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+  color: #000;
+  background-color: #fffce0;
+}
+
+input:disabled {
+  background-color: #ddd;
+  color: #555;
 }
 
 button {
-  padding: 0.5em 1em;
   font-size: 1em;
-  margin: 0.5em;
-  background-color: #d4af37;
+  padding: 0.5em 1em;
+  background-color: goldenrod;
   border: none;
-  border-radius: 5px;
+  border-radius: 6px;
+  color: white;
   cursor: pointer;
+  margin: 0.3em;
 }
 
 button:hover {
-  background-color: #e8c95c;
+  background-color: darkorange;
 }
 
 .result {
+  margin-top: 1em;
   font-weight: bold;
-  margin-top: 1em;
 }
 
-#cooldown {
-  font-size: 0.9em;
-  color: #cccccc;
-  margin-top: 1em;
-}
-
-#suggestions {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  background-color: #fff5d9;
+.suggestions {
+  background-color: #fffbe5;
+  color: #222;
   border: 1px solid #ccc;
   max-height: 150px;
   overflow-y: auto;
-  border-radius: 5px;
-  margin-top: 5px;
-  width: 80%;
-  margin-left: auto;
-  margin-right: auto;
-  text-align: left;
-  z-index: 10;
-  position: relative;
+  font-size: 0.9em;
+  padding: 0.5em;
+  border-radius: 0 0 10px 10px;
 }
 
-#suggestions li {
-  padding: 0.4em 0.6em;
+.suggestion:hover {
+  background-color: #ffe27d;
   cursor: pointer;
-}
-
-#suggestions li:hover {
-  background-color: #eed;
 }
