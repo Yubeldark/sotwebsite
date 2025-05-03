@@ -104,6 +104,7 @@
           resultElem.textContent = "✅ Bravo, bonne réponse !";
           resultElem.style.color = "lime";
           inputField.disabled = true;
+          inputField.placeholder = "";
           document.querySelector("button").disabled = true;
           shareBtn.style.display = "inline-block";
           localStorage.setItem("sot-guess", todayKey);
@@ -124,6 +125,7 @@
         resultElem.textContent = "🔒 Vous avez déjà répondu aujourd’hui.";
         resultElem.style.color = "#cccccc";
         inputField.disabled = true;
+          inputField.placeholder = "";
         document.querySelector("button").disabled = true;
         shareBtn.style.display = "none";
       }
