@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quel skin ?</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <img src="../images/logo_sotdle.png" alt="Logo SOTDLE" class="site-logo" onclick="window.location.href='../index.html'"/>
+
+  <div class="game-container">
+    <h1>🎨 Quel skin ?</h1>
+    <p>Devine le skin mystère en utilisant les indices de chaque tentative !</p>
+    
+    <select id="skinInput">
+      <option disabled selected>Choisir un skin...</option>
+    </select>
+    
+    <table id="guessTable">
+      <thead>
+        <tr>
+          <th>Nom</th>
+          <th>Catégorie</th>
+          <th>Sous-catégorie</th>
+          <th>Couleur</th>
+          <th>Date</th>
+          <th>Obtention</th>
+          <th>Prix</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    
+    <div id="feedback"></div>
+    <div id="attempts"></div>
+    <button id="resetButton" style="display: none;">Essayer à nouveau</button>
+  </div>
+
+  <script>
+    const skins = {
+      "Voiles des Sombres aventuriers": {
+        nom: "Voiles des Sombres aventuriers",
+        categorie: "Personnalisation de bateau",
+        sousCategorie: "Voile",
+        couleur: ["Noir", "Gris"],
+        date: "Saison 1",
+        obtention: "Shop",
+        prix: "8,268,750 Gold"
+      },
+      "Tromblon de Minuit": {
+        nom: "Tromblon de Minuit",
+        categorie: "Armurerie",
+        sousCategorie: "Tromblon",
+        couleur: ["Noir", "Gris", "Vert"],
+        date: "Lancement",
+        obtention: "Code, Giveaway",
+        prix: "-"
+      },
+      "Bell Brigade Streaked Hair": {
+        nom: "Bell Brigade Streaked Hair",
+        categorie: "Accessoire",
+        sousCategorie: "Coiffure",
+        couleur: [],
+        date: "Saison 5",
+        obtention: "Shop",
+        prix: "600 Doublons"
+      },
+      "Arquebuse à mire d'Obsidienne": {
+        nom: "Arquebuse à mire d'Obsidienne",
+        categorie: "Armurerie",
+        sousCategorie: "Arquebuse",
+        couleur: ["Noir", "Gris", "Vert"],
+        date: "Lancement",
+        obtention: "Code, Giveaway",
+        prix: "-"
+      },
+      "Voiles de l'âge d'or": {
+        nom: "Voiles de l'âge d'or",
+        categorie: "Personnalisation de bateau",
+        sousCategorie: "Voile",
+        couleur: ["Beige"],
+        date: "Saison 1",
+        obtention: "Plunder Pass",
+        prix: "8,268,750 Gold"
+      }
+    };
+
+    // Nombre maximum de tentatives
+    const MAX_ATTEMPTS = 6;
+    let attempts = 0;
+    let gameOver = false;
+
+    // Fonction pour sélectionner un nouveau skin aléatoire
+    function selectRandomSkin() {
+      const skinNames = Object.keys(skins);
+      return skinNames[Math.floor(Math.random() * skinNames.length)];
+    }
+
+    let correctName = selectRandomSkin();
+    let correctSkin = skins[correctName];
+
+    const input = document.getElementById("skinInput");
+    const tbody = document.querySelector("#guessTable tbody");
+    const feedback = document.getElementById("feedback");
+    const attemptsDisplay = document.getElementById("attempts");
+    const resetButton = document.getElementById("resetButton");
+
+    // Afficher le compteur de tentatives
+    attemptsDisplay.textContent = `Tentative: 0/${MAX_ATTEMPTS}`;
+
+    // Trier les noms de skin par ordre alphabétique
+    const sortedSkinNames = Object.keys(skins).sort();
+    sortedSkinNames.forEach(name => {
+      const option = document.createElement("option");
+      option.value = name;
+      option.textContent = name;
+      input.appendChild(option);
+    });
+
+    // Fonction pour réinitialiser le jeu
+    function resetGame() {
+      // Réinitialiser les variables du jeu
+      attempts = 0;
+      gameOver = false;
+      correctName = selectRandomSkin();
+      correctSkin = skins[correctName];
+      
+      // Effacer les résultats précédents
+      tbody.innerHTML = '';
+      feedback.textContent = '';
+      feedback.classList.remove('show');
+      
+      // Réinitialiser l'interface
+      input.disabled = false;
+      input.value = "Choisir un skin...";
+      attemptsDisplay.textContent = `Tentative: 0/${MAX_ATTEMPTS}`;
+      attemptsDisplay.classList.remove('warning', 'danger');
+      
+      // Cacher le bouton de réinitialisation
+      resetButton.style.display = 'none';
+      resetButton.classList.remove('show');
+    }
+
+    // Gestionnaire d'événement pour le bouton de réinitialisation
+    resetButton.addEventListener('click', resetGame);
+
+    input.addEventListener("change", () => {
+      if (gameOver) return;
+      
+      const guess = input.value;
+      if (!guess || !skins[guess]) return;
+
+      attempts++;
+      
+      // Mettre à jour l'affichage des tentatives
+      attemptsDisplay.textContent = `Tentative: ${attempts}/${MAX_ATTEMPTS}`;
+      
+      // Ajouter des classes d'avertissement visuel
+      if (attempts >= MAX_ATTEMPTS - 1) {
+        attemptsDisplay.classList.add('danger');
+      } else if (attempts >= MAX_ATTEMPTS - 2) {
+        attemptsDisplay.classList.add('warning');
+      }
+
+      const skin = skins[guess];
+      const row = document.createElement("tr");
+      row.className = "new-row"; // Ajouter la classe pour l'animation
+      
+      const fields = ["nom", "categorie", "sousCategorie", "couleur", "date", "obtention", "prix"];
+
+      fields.forEach(field => {
+        const td = document.createElement("td");
+        const guessVal = skin[field];
+        const correctVal = correctSkin[field];
+
+        if (Array.isArray(guessVal)) {
+          td.textContent = guessVal.length > 0 ? guessVal.join(", ") : "-";
+        } else {
+          td.textContent = guessVal || "-";
+        }
+
+        let isMatch = false;
+        let isPartial = false;
+
+        if (Array.isArray(guessVal) && Array.isArray(correctVal)) {
+          const match = guessVal.filter(val => correctVal.includes(val));
+          if (match.length === correctVal.length && match.length === guessVal.length) {
+            isMatch = true;
+          } else if (match.length > 0) {
+            isPartial = true;
+          }
+        } else {
+          isMatch = guessVal === correctVal;
+        }
+
+        if (guess === correctName || isMatch) {
+          td.className = "correct";
+        } else if (isPartial) {
+          td.className = "partial";
+        } else {
+          td.className = "incorrect";
+        }
+
+        row.appendChild(td);
+      });
+
+      tbody.appendChild(row);
+
+      // Attendre la fin des animations avant d'afficher le message
+      setTimeout(() => {
+        if (guess === correctName) {
+          gameOver = true;
+          feedback.innerHTML = "🎉 <span style='color:#4caf50'>Bravo ! Tu as trouvé le skin mystère !</span>";
+          feedback.classList.add('show');
+          input.disabled = true;
+          
+          // Afficher le bouton de réinitialisation
+          resetButton.style.display = 'inline-block';
+          resetButton.classList.add('show');
+        } else if (attempts >= MAX_ATTEMPTS) {
+          gameOver = true;
+          feedback.innerHTML = `❌ <span style='color:#f44336'>Perdu ! Le skin était: ${correctName}</span>`;
+          feedback.classList.add('show');
+          input.disabled = true;
+          
+          // Afficher le bouton de réinitialisation
+          resetButton.style.display = 'inline-block';
+          resetButton.classList.add('show');
+        }
+      }, 1500); // Attendre 1.5 secondes pour la fin des animations
+
+      input.value = "Choisir un skin...";
+    });
+  </script>
+</body>
+</html>
