@@ -150,3 +150,12 @@ button:hover {
   border-radius: 12px;
   z-index: 1001;
 }
+
+
+/* Style input désactivé */
+.disabled-input {
+  background-color: #cccccc !important;
+  color: #333333 !important;
+  font-style: italic;
+  text-align: center;
+}
