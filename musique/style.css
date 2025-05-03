@@ -1,124 +1,114 @@
-
 body {
   background: url('../images/background.jpg') no-repeat center center fixed;
   background-size: cover;
-  font-family: sans-serif;
+  font-family: 'Segoe UI', sans-serif;
   color: white;
-  text-align: center;
   margin: 0;
   padding: 2em;
+  text-align: center;
 }
 
-.music-container {
-  background-color: rgba(0, 0, 0, 0.7);
+.container {
+  background-color: rgba(0, 0, 0, 0.75);
   padding: 2em;
-  border-radius: 12px;
-  display: inline-block;
-  width: 90%;
   max-width: 600px;
+  margin: auto;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(255,255,255,0.2);
 }
 
-h1 {
+.site-logo {
+  width: 250px;
   margin-bottom: 1em;
+  cursor: pointer;
 }
 
-.controls {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1em;
-  align-items: center;
-  justify-content: center;
-  margin: 1em 0;
+input[type="text"] {
+  padding: 10px;
+  width: 80%;
+  font-size: 16px;
+  border-radius: 6px;
+  border: none;
+  margin: 10px 0;
+  text-align: center;
+}
+
+#suggestionList {
+  list-style: none;
+  padding: 0;
+  margin: 0 auto;
+  max-height: 150px;
+  overflow-y: auto;
+  width: 80%;
+  background: white;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+#suggestionList li {
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+  cursor: pointer;
+  color: #111;
+  font-weight: 500;
+  background: #fff;
+}
+
+#suggestionList li:hover {
+  background-color: #f0f0f0;
 }
 
 button {
-  padding: 0.6em 1.2em;
-  font-size: 16px;
-  background-color: #f4c542;
+  background-color: #00aaff;
+  color: white;
   border: none;
-  border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 6px;
   cursor: pointer;
+  margin: 10px;
 }
 
 button:hover {
-  background-color: #ddb328;
+  background-color: #007acc;
 }
 
-input[type="range"] {
-  width: 120px;
-}
-
-#guess {
-  padding: 10px;
-  width: 80%;
-  border-radius: 6px;
-  border: none;
-  font-size: 16px;
-  margin-top: 20px;
-}
-
-.suggestions {
-  margin-top: 10px;
-}
-
-.suggestion {
-  background: #f8d768;
-  color: black;
-  padding: 8px;
-  margin: 5px auto;
-  width: 80%;
-  max-width: 300px;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.suggestion:hover {
-  background-color: #f8cccc;
-}
-
-.result {
-  margin-top: 15px;
-  font-size: 18px;
-}
-
-
-
-/* Barre de lecture - moderne, épaisse, jaune/orange */
-#progress {
-  appearance: none;
-  width: 250px;
-  height: 10px;
-  background: #f4c542;
-  border-radius: 5px;
-  outline: none;
-}
-#progress::-webkit-slider-thumb {
-  appearance: none;
-  height: 18px;
-  width: 18px;
-  background: white;
-  border: 2px solid #333;
-  border-radius: 50%;
-  cursor: pointer;
-  margin-top: -4px;
-}
-
-/* Barre de volume - moderne, fine, bleue */
 #volumeSlider {
-  appearance: none;
-  width: 100px;
-  height: 6px;
-  background: #4ecdc4;
-  border-radius: 4px;
-  outline: none;
+  width: 150px;
+  margin: 10px;
 }
-#volumeSlider::-webkit-slider-thumb {
-  appearance: none;
-  height: 14px;
-  width: 14px;
-  background: white;
-  border: 2px solid #333;
-  border-radius: 50%;
-  cursor: pointer;
-  margin-top: -4px;
+
+progress {
+  width: 80%;
+  height: 10px;
+  margin: 10px auto;
+  display: block;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+progress::-webkit-progress-bar {
+  background-color: #444;
+}
+
+progress::-webkit-progress-value {
+  background-color: #ffc107;
+}
+
+#feedback {
+  margin-top: 10px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+#timeDisplay {
+  color: #ccc;
+  margin-bottom: 10px;
+}
+
+#streak {
+  margin-top: 20px;
+  font-weight: bold;
+  font-size: 18px;
+  color: gold;
 }

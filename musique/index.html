@@ -1,114 +1,396 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Musiques pirates</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Musique pirate</title>
   <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="favicon.ico" type="../image/favicon">
 </head>
 <body>
-  <div class="music-container">
-    <h1>🎼 Musiques pirates</h1>
+  <div class="container">
+    <img src="../images/logo_sotdle.png" class="site-logo" alt="Retour accueil" onclick="window.location.href='../index.html'" />
+    <h1>🎵 Musique pirate</h1>
+    <p>Devine la musique avec un extrait !</p>
 
-    <audio id="audio" src="Sea of Thieves Season 15_ Official Title Screen Reveal.mp3"></audio>
+    <button id="playBtn">▶️ Écouter</button>
+    <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="1">
+    <progress id="progress" value="0" max="5"></progress>
+    <div id="timeDisplay">0s</div>
 
-    <div class="controls">
-      <button id="playPauseBtn">▶️ Play</button>
-      <input type="range" id="progress" value="0" min="0" max="10" step="0.1">
-      <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="1">
-      <span id="timeDisplay">0:00 / 0:10</span>
-    </div>
+    <input type="text" id="answerInput" placeholder="Entrez un titre..." autocomplete="off">
+    <ul id="suggestionList"></ul>
 
-    <input type="text" id="guess" placeholder="Entrez un titre..." autocomplete="off">
-    <div class="suggestions" id="suggestions"></div>
-    <div id="result" class="result"></div>
+    <p id="feedback"></p>
+    <p id="streak">Série : 0</p>
+
+    <audio id="audio"></audio>
   </div>
 
   <script>
-    const audio = document.getElementById("audio");
-    const playPauseBtn = document.getElementById("playPauseBtn");
-    const progress = document.getElementById("progress");
-    const volumeSlider = document.getElementById("volumeSlider");
-    const timeDisplay = document.getElementById("timeDisplay");
-    const guessInput = document.getElementById("guess");
-    const suggestionsContainer = document.getElementById("suggestions");
-    const result = document.getElementById("result");
-
     const musics = [
-      "Title Screen",
-      "Shanty of the Deep",
-      "We Shall Sail Together",
-      "Becalmed"
+      {
+        title: "The Wild Seas",
+        acceptedAnswers: ["The Wild Seas"],
+        file: "Sea of Thieves Season 15_ Official Title Screen Reveal.mp3"
+      },
+      {
+        title: "Maiden Voyage",
+        acceptedAnswers: ["Maiden Voyage"],
+        file: "Maiden Voyage (Original Game Soundtrack).mp3"
+      },
+      {
+        title: "Shores of Gold",
+        acceptedAnswers: ["Shores of Gold"],
+        file: "Shores of Gold (Original Game Soundtrack).mp3"
+      },
+	  {
+        title: "Be more Pirat",
+        acceptedAnswers: ["Be more Pirat"],
+        file: "Be more pirat.mp3"
+      },
+	  {
+        title: "Adventure awaits",
+        acceptedAnswers: ["Adventure awaits", "Loading Screen"],
+        file: "Adventure awaits.mp3"
+      },
+	  {
+        title: "A Star to sail by",
+        acceptedAnswers: ["A Star to sail by", "Buried Treasures"],
+        file: "A star to sail by.mp3"
+      },
+	  {
+        title: "1812",
+        acceptedAnswers: ["1812"],
+        file: "1812.mp3"
+      },
+      {
+        title: "We Shall Sail Together",
+        acceptedAnswers: ["We Shall Sail Together"],
+        file: "We Shall Sail Together (Original Game Soundtrack).mp3"
+      },
+      {
+        title: "Soulflame Captain",
+        acceptedAnswers: ["Soulflame Captain", "Legend of the Veil"],
+        file: "soulflame_captain.mp3"
+      },
+	  {
+        title: "Bosun Bill",
+        acceptedAnswers: ["Bosun Bill"],
+        file: "Bosun Bill.mp3"
+      },
+	  {
+        title: "Captains of Adventure",
+        acceptedAnswers: ["Captains of Adventure"],
+        file: "captains of adventure.mp3"
+      },
+	  {
+        title: "For the love of Adventure",
+        acceptedAnswers: ["For the Love of Adventure"],
+        file: "For the love of adventure.mp3"
+      },
+	  {
+        title: "Glory to the Guardians",
+        acceptedAnswers: ["Glory to the Guardians"],
+        file: "Glory to the Guardians.mp3"
+      },
+	  {
+        title: "Gold Hoarder",
+        acceptedAnswers: ["Gold Hoarder", "Graymarrow"],
+        file: "gold hoarder.mp3"
+      },
+	  {
+        title: "Happy Birthday",
+        acceptedAnswers: ["Happy Birthday"],
+        file: "happybirthday.mp3"
+      },
+	  {
+        title: "Infernal Galop",
+        acceptedAnswers: ["Infernal Galop"],
+        file: "infernal galop.mp3"
+      },
+	  {
+        title: "Making Mischief",
+        acceptedAnswers: ["Making Mischief"],
+        file: "making mischief.mp3"
+      },
+	  {
+        title: "On the path of ancient Legends",
+        acceptedAnswers: ["Path of Ancient Legends", "Vaults of the Ancients"],
+        file: "path of ancient legend.mp3"
+      },
+	  {
+        title: "Ride of the Valkyries",
+        acceptedAnswers: ["Ride of the Valkyries"],
+        file: "Ride of the Valkyries.mp3"
+      },
+	  {
+        title: "Warriors of the Waves",
+        acceptedAnswers: ["Warriors of the Waves"],
+        file: "warriors.mp3"
+      },
+	  {
+        title: "Shrouded Ghost",
+        acceptedAnswers: ["Shrouded Ghost"],
+        file: "shrouded.mp3"
+      },
+	  {
+        title: "Skeleton Fort Boss",
+        acceptedAnswers: ["Skeleton Fort Boss"],
+        file: "skeleton fort boss.mp3"
+      },
+	  {
+        title: "Lost Shipments",
+        acceptedAnswers: ["Lost Shipments", "Shipwrecks"],
+        file: "shipwreck.mp3"
+      },
+	  {
+        title: "Spectral Sails",
+        acceptedAnswers: ["Spectral Sails", "Burning Blade Armada"],
+        file: "spectral sails.mp3"
+      },
+	  {
+        title: "Stronghold of the Seas",
+        acceptedAnswers: ["Stronghold of the Seas", "Sea Forts"],
+        file: "stronghold of the seas.mp3"
+      },
+	  {
+        title: "Haunted Shores",
+        acceptedAnswers: ["Haunted Shores"],
+        file: "haunted shores.mp3"
+      },
+	  {
+        title: "Fettucini Brothers",
+        acceptedAnswers: ["Fettucini Brothers", "Circus"],
+        file: "fettucini.mp3"
+      },
+	  {
+        title: "The Great Meg Chase",
+        acceptedAnswers: ["The great Meg Chase"],
+        file: "great meg chase.mp3"
+      },
+	  {
+        title: "The Legend of Monkey Island",
+        acceptedAnswers: ["The Legend of Monkey Island"],
+        file: "monkey island.mp3"
+      },
+	  {
+        title: "The Ashen Lord",
+        acceptedAnswers: ["Ashen Lord", "Ashen Winds"],
+        file: "lord ashen wind.mp3"
+      },
+	  {
+        title: "The Rise of the Reapers",
+        acceptedAnswers: ["The Rise of the Reapers", "Servants of the Flame"],
+        file: "The Rise of the Reapers.mp3"
+      },
+	  {
+        title: "The Flame Rises",
+        acceptedAnswers: ["The Flame Rises", "Burning Blade"],
+        file: "the flame rises.mp3"
+      },
+	  {
+        title: "The Scumm Bar",
+        acceptedAnswers: ["The Scumm Bar"],
+        file: "scumm bar.mp3"
+      },
+	  {
+        title: "Wild Rose",
+        acceptedAnswers: ["Wild Rose"],
+        file: "wild rose.mp3"
+      },
+	  {
+        title: "Treasury Ambush",
+        acceptedAnswers: ["Treasury Ambush"],
+        file: "treasury ambush.mp3"
+      },
+	  {
+        title: "Who Shall Not Be Returning",
+        acceptedAnswers: ["We Shall Not Be Returning"],
+        file: "shall not be returning.mp3"
+      },
+	  {
+        title: "Stitcher's Sorrow",
+        acceptedAnswers: ["Stitcher's Sorrow"],
+        file: "stitcher.mp3"
+      },
+	  {
+        title: "Into the Heart of Fire",
+        acceptedAnswers: ["Into the Heart of Fire"],
+        file: "into the heart.mp3"
+      },
+	  {
+        title: "The Risen",
+        acceptedAnswers: ["The Risen", "Fort of Fortune"],
+        file: "the risen.mp3"
+      },
+	  {
+        title: "Force of Flame",
+        acceptedAnswers: ["Force of Flame", "Ashen Lord"],
+        file: "Force of flame.mp3"
+      },
+	  {
+        title: "The Golden Voyage",
+        acceptedAnswers: ["The Golden Voyage"],
+        file: "the golden voyage.mp3"
+      },
+	  {
+        title: "Return of the Damned",
+        acceptedAnswers: ["Return of the Damned"],
+        file: "return of the damned.mp3"
+      },
+	  {
+        title: "Grogg Mayles",
+        acceptedAnswers: ["Grogg Mayles"],
+        file: "Grogg Mayles.mp3"
+      },
+	  {
+        title: "Hungering Deep",
+        acceptedAnswers: ["Hungering Deep", "Megalodon Attacks"],
+        file: "hungering deep.mp3"
+      },
+	  {
+        title: "Blessing of Athena's Fortune",
+        acceptedAnswers: ["Blessing of Athena's Fortune"],
+        file: "blessing athena.mp3"
+      },
+	  {
+        title: "Ritual of the Flame",
+        acceptedAnswers: ["Ritual of the Flame"],
+        file: "ritual flame.mp3"
+      },
+	  
     ];
-    const correctAnswer = "title screen";
 
-    function formatTime(seconds) {
-      const min = Math.floor(seconds / 60);
-      const sec = Math.floor(seconds % 60).toString().padStart(2, '0');
-      return `${min}:${sec}`;
+    let chosen;
+    let audio = document.getElementById("audio");
+    const playBtn = document.getElementById("playBtn");
+    const volumeSlider = document.getElementById("volumeSlider");
+    const progress = document.getElementById("progress");
+    const timeDisplay = document.getElementById("timeDisplay");
+    const input = document.getElementById("answerInput");
+    const suggestionList = document.getElementById("suggestionList");
+    const feedback = document.getElementById("feedback");
+    const streakDisplay = document.getElementById("streak");
+
+    // Collection de tous les titres pour les suggestions (incluant toutes les réponses acceptées)
+    let allTitles = [];
+    musics.forEach(music => {
+      music.acceptedAnswers.forEach(answer => {
+        if (!allTitles.includes(answer)) {
+          allTitles.push(answer);
+        }
+      });
+    });
+    
+    let maxTime;
+    let attempts;
+    let streak = 0;
+    let interval;
+    let guessed;
+
+    function normalizeText(text) {
+      return text.trim().toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
     }
 
-    function updateProgress() {
-      progress.value = audio.currentTime;
-      timeDisplay.textContent = formatTime(audio.currentTime) + " / 0:10";
+    function newRound() {
+      chosen = musics[Math.floor(Math.random() * musics.length)];
+      audio.src = chosen.file;
+      maxTime = 5;
+      attempts = 0;
+      guessed = false;
+      input.disabled = false;
+      input.value = "";
+      feedback.textContent = "";
+      timeDisplay.textContent = "0s";
+      progress.value = 0;
     }
 
-    playPauseBtn.addEventListener("click", () => {
-      if (audio.paused) {
-        audio.currentTime = 0;
-        audio.play();
-        playPauseBtn.textContent = "⏸️ Pause";
+    function checkAnswer(guess) {
+      if (!guess || guessed) return;
+
+      const cleanedGuess = normalizeText(guess);
+      const isCorrect = chosen.acceptedAnswers.some(answer => {
+        const cleanedAnswer = normalizeText(answer);
+        return cleanedGuess === cleanedAnswer;
+      });
+
+      attempts++;
+
+      if (isCorrect) {
+        feedback.textContent = "✅ Bonne réponse !";
+        feedback.style.color = "lime";
+        guessed = true;
+        streak++;
+        setTimeout(newRound, 2000);
       } else {
-        audio.pause();
-        playPauseBtn.textContent = "▶️ Play";
+        feedback.textContent = `❌ Faux (${attempts}/3)`;
+        feedback.style.color = "crimson";
+        maxTime = Math.min(maxTime + 5, 15);
+        if (attempts >= 3) {
+          feedback.textContent = "💀 Perdu ! Réponse : " + chosen.title;
+          input.disabled = true;
+          streak = 0;
+          setTimeout(newRound, 3000);
+        }
       }
-    });
 
-    audio.addEventListener("timeupdate", () => {
-      if (audio.currentTime >= 10) {
-        audio.pause();
-        audio.currentTime = 0;
-        playPauseBtn.textContent = "▶️ Play";
-      }
-      updateProgress();
-    });
-
-    progress.addEventListener("input", () => {
-      audio.currentTime = progress.value;
-    });
+      streakDisplay.textContent = `Série : ${streak}`;
+      input.value = "";
+      suggestionList.innerHTML = "";
+    }
 
     volumeSlider.addEventListener("input", () => {
       audio.volume = volumeSlider.value;
     });
 
-    guessInput.addEventListener("input", () => {
-      const input = guessInput.value.toLowerCase();
-      suggestionsContainer.innerHTML = "";
-      if (input === "") return;
-      musics.forEach(music => {
-        if (music.toLowerCase().startsWith(input)) {
-          const suggestion = document.createElement("div");
-          suggestion.className = "suggestion";
-          suggestion.textContent = music;
-          suggestion.addEventListener("click", () => {
-            guessInput.value = music;
-            suggestionsContainer.innerHTML = "";
-            checkAnswer(music);
-          });
-          suggestionsContainer.appendChild(suggestion);
+    playBtn.addEventListener("click", () => {
+      audio.currentTime = 0;
+      progress.max = maxTime;
+      timeDisplay.textContent = "0s";
+      audio.play();
+
+      clearInterval(interval);
+      interval = setInterval(() => {
+        progress.value = audio.currentTime;
+        timeDisplay.textContent = Math.floor(audio.currentTime) + "s";
+        if (audio.currentTime >= maxTime) {
+          audio.pause();
+          clearInterval(interval);
         }
+      }, 100);
+    });
+
+    input.addEventListener("input", () => {
+      suggestionList.innerHTML = "";
+      const typed = input.value.toLowerCase();
+      if (!typed) return;
+      
+      // Filtrer les titres qui contiennent le texte saisi
+      const matchingTitles = allTitles.filter(t => 
+        normalizeText(t).includes(normalizeText(typed))
+      );
+      
+      // Limiter à 5 suggestions maximum pour une meilleure UX
+      matchingTitles.slice(0, 5).forEach(title => {
+        const li = document.createElement("li");
+        li.textContent = title;
+        li.onclick = () => {
+          input.value = title;
+          suggestionList.innerHTML = "";
+          checkAnswer(input.value);
+        };
+        suggestionList.appendChild(li);
       });
     });
 
-    function checkAnswer(name) {
-      if (name.toLowerCase() === correctAnswer) {
-        result.textContent = "🎉 Bonne réponse !";
-        result.style.color = "lime";
-      } else {
-        result.textContent = "❌ Mauvaise réponse.";
-        result.style.color = "crimson";
+    input.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") {
+        checkAnswer(input.value);
       }
-    }
+    });
+
+    newRound();
   </script>
 </body>
 </html>
