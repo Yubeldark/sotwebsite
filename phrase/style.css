@@ -106,4 +106,6 @@ button:hover {
 .suggestion:hover {
   background-color: #ffe27d;
   cursor: pointer;
+  color: #222;
+  font-weight: bold;
 }
