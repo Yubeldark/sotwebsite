@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Île Floutée</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a href="../index.html">
+  <img src="../images/logo_sotdle.png" alt="Logo SOTDLE" class="site-logo" />
+</a>
+  <div class="game-container">
+    <h1>🌍 Île Floutée</h1>
+    <p>Devine de quelle Île il s'agit. L'image se dézoome à chaque mauvaise réponse !</p>
+
+    <div class="image-container">
+      <img id="islandImage" src="../images/smugglers_zoom_1.png" alt="Zoom Île">
+    </div>
+
+    <input type="text" id="islandInput" placeholder="Entrez le nom de l'Île...">
+    <div id="attempts">Tentatives : 0</div>
+    <div id="feedback"></div>
+  </div>
+
+  <script>
+    const correctAnswer = "smuggler's bay";
+    const islandInput = document.getElementById("islandInput");
+    const islandImage = document.getElementById("islandImage");
+    const attemptsDisplay = document.getElementById("attempts");
+    const feedback = document.getElementById("feedback");
+    const zoomImages = [
+      "../images/smugglers_zoom_1.png",
+      "../images/smugglers_zoom_2.png",
+      "../images/smugglers_zoom_3.png",
+      "../images/smugglers_zoom_4.png",
+      "../images/smugglers_zoom_5.png"
+    ];
+
+    let currentZoom = 0;
+    let attempts = 0;
+
+    islandInput.addEventListener("keydown", function(event) {
+      if (event.key === "Enter") {
+        const guess = islandInput.value.trim().toLowerCase();
+        attempts++;
+        attemptsDisplay.textContent = `Tentatives : ${attempts}`;
+
+        if (guess === correctAnswer) {
+          feedback.textContent = "🎉 Bravo ! Bonne réponse.";
+          feedback.style.color = "lime";
+        } else {
+          feedback.textContent = "❌ Mauvaise réponse.";
+          feedback.style.color = "red";
+          currentZoom++;
+          if (currentZoom < zoomImages.length) {
+            islandImage.src = zoomImages[currentZoom];
+          } else {
+            feedback.textContent += " (Zoom maximal atteint)";
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>
