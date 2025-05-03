@@ -1,166 +1,150 @@
+
 body {
-  margin: 0;
-  padding: 0;
-  background-image: url("../images/background.jpg");
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
-  font-family: 'Georgia', serif;
-  color: #fffbe0;
+    margin: 0;
+    font-family: Georgia, serif;
+    background: url('../images/background.jpg') no-repeat center center fixed;
+    background-size: cover;
+    color: white;
 }
 
 .container {
-  max-width: 600px;
-  margin: 10vh auto;
-  background-color: rgba(0, 0, 0, 0.7);
-  padding: 2em;
-  border-radius: 15px;
-  box-shadow: 0 0 15px #000;
-  text-align: center;
+    max-width: 640px;
+    margin: 60px auto;
+    padding: 40px;
+    background-color: rgba(0, 0, 0, 0.65);
+    border-radius: 12px;
+    box-shadow: 0 0 20px black;
+    text-align: center;
 }
 
 h1 {
-  font-size: 2.2em;
-  margin-bottom: 0.5em;
+    font-size: 36px;
+    margin-bottom: 24px;
 }
 
 .quote-box {
-  background-color: #fff9da;
-  color: #2c1e00;
-  padding: 1em;
-  border-radius: 10px;
-  margin-bottom: 1em;
-  font-style: italic;
-  font-size: 1.2em;
-  line-height: 1.5;
-  border: 2px solid #e0c075;
-  box-shadow: 0 0 8px rgba(0,0,0,0.3);
+    background-color: #fef1c4;
+    color: #333;
+    padding: 12px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    font-style: italic;
+    font-size: 18px;
 }
 
-input,
-input::placeholder {
-  font-size: 1em;
-  padding: 0.6em;
-  width: 80%;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  margin-bottom: 0.5em;
-  color: #000;
-  background-color: #fffce0;
+input[type="text"] {
+    width: 90%;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 6px;
+    border: none;
+    margin-bottom: 12px;
 }
 
-input:disabled {
-  background-color: #ddd;
-  color: #555;
-}
-
-button {
-  font-size: 1em;
-  padding: 0.5em 1em;
-  background-color: goldenrod;
-  border: none;
-  border-radius: 6px;
-  color: white;
-  cursor: pointer;
-  margin: 0.3em;
-}
-
-button:hover {
-  background-color: darkorange;
-}
-
-.result {
-  margin-top: 1em;
-  font-weight: bold;
+input.disabled {
+    background-color: #888;
+    color: #eee;
+    text-align: center;
 }
 
 .suggestions {
-  background-color: #fffbe5;
-  color: #222;
-  border: 1px solid #ccc;
-  max-height: 180px;
-  overflow-y: auto;
-  font-size: 0.9em;
-  border-radius: 0 0 10px 10px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-  margin: 0 auto;
-  width: 80%;
-  padding: 0.3em 0;
+    margin-top: 10px;
 }
 
 .suggestion {
-  padding: 0.4em 0.6em;
-  display: flex;
-  align-items: center;
-  gap: 0.6em;
-}
-
-.suggestion img {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  object-fit: cover;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px;
+    background-color: #f8d768;
+    margin: 5px auto;
+    width: 90%;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s;
 }
 
 .suggestion:hover {
-  background-color: #ffe27d;
-  cursor: pointer;
-  color: #222;
-  font-weight: bold;
+    background-color: #fdd56b;
+    color: #222;
 }
 
+.suggestion img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+}
 
-/* Confetti animation */
-#confetti-container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  overflow: hidden;
-  z-index: 1000;
+.suggestion.locked {
+    pointer-events: none;
+    opacity: 0.4;
+    position: relative;
+}
+
+.lock-overlay {
+    position: absolute;
+    top: 0; left: 0;
+    width: 80px;
+    height: 80px;
+    background-color: rgba(0, 0, 0, 0.7);
+    background-image: url('../images/ps-locked-item.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.buttons {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+}
+
+button {
+    background-color: #f0b800;
+    color: black;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.result {
+    margin-top: 10px;
+    font-size: 16px;
+}
+
+.countdown {
+    margin-top: 10px;
+    font-size: 14px;
 }
 
 .confetti {
-  position: absolute;
-  width: 10px;
-  height: 10px;
-  opacity: 0.8;
-  animation: fall 3s linear forwards;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+    animation: fadeout 4s forwards;
+    z-index: 1000;
 }
 
-@keyframes fall {
-  to {
-    transform: translateY(100vh) rotate(360deg);
-    opacity: 0;
-  }
-}
-
-#congrats {
-  position: fixed;
-  top: 40%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 2.5em;
-  color: gold;
-  font-weight: bold;
-  background-color: rgba(0,0,0,0.7);
-  padding: 1em 2em;
-  border-radius: 12px;
-  z-index: 1001;
+@keyframes fadeout {
+    0% {opacity: 1;}
+    100% {opacity: 0;}
 }
 
 
-/* Style input désactivé */
-input:disabled {
-  background-color: #ddd !important;
-  color: #444 !important;
-  border: 1px solid #bbb !important;
-  text-align: center;
-  font-weight: bold;
-}
-
-input::placeholder:disabled {
-  color: #444;
+.site-logo {
+    display: block;
+    margin: 0 auto 20px auto;
+    max-width: 280px;
+    height: auto;
 }
