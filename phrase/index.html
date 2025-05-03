@@ -117,6 +117,7 @@
           document.querySelector("button").disabled = true;
           shareBtn.style.display = "inline-block";
           localStorage.setItem("sot-guess", todayKey);
+          showConfetti();
         } else {
           resultElem.textContent = "❌ Mauvaise réponse, essaie encore.";
           resultElem.style.color = "red";
@@ -138,6 +139,33 @@
         document.querySelector("button").disabled = true;
         shareBtn.style.display = "none";
       }
+
+      
+function showConfetti() {
+  const confettiContainer = document.createElement("div");
+  confettiContainer.id = "confetti-container";
+  document.body.appendChild(confettiContainer);
+
+  for (let i = 0; i < 100; i++) {
+    const confetti = document.createElement("div");
+    confetti.classList.add("confetti");
+    confetti.style.left = Math.random() * 100 + "vw";
+    confetti.style.animationDelay = Math.random() * 2 + "s";
+    confetti.style.backgroundColor = ["#fcd303", "#ff6b6b", "#4ecdc4", "#ffe66d"][Math.floor(Math.random()*4)];
+    confettiContainer.appendChild(confetti);
+  }
+
+  const congrats = document.createElement("div");
+  congrats.id = "congrats";
+  congrats.textContent = "🎉 Félicitations ! 🎉";
+  document.body.appendChild(congrats);
+
+  setTimeout(() => {
+    confettiContainer.remove();
+    congrats.remove();
+  }, 4000);
+}
+
 
       function startCountdown() {
         function updateTimer() {
