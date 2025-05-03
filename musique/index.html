@@ -304,6 +304,7 @@
       feedback.textContent = "";
       timeDisplay.textContent = "0s";
       progress.value = 0;
+      playBtn.innerHTML = "▶️ Écouter";
     }
 
     function checkAnswer(guess) {
@@ -338,6 +339,7 @@
       streakDisplay.textContent = `Série : ${streak}`;
       input.value = "";
       suggestionList.innerHTML = "";
+      suggestionList.classList.remove("active");
     }
 
     volumeSlider.addEventListener("input", () => {
@@ -345,24 +347,41 @@
     });
 
     playBtn.addEventListener("click", () => {
-      audio.currentTime = 0;
-      progress.max = maxTime;
-      timeDisplay.textContent = "0s";
-      audio.play();
+      if (audio.paused) {
+        // Si l'audio est en pause, on le joue
+        audio.currentTime = 0;
+        progress.max = maxTime;
+        timeDisplay.textContent = "0s";
+        audio.play();
+        playBtn.innerHTML = "⏸️ Pause";
 
+        clearInterval(interval);
+        interval = setInterval(() => {
+          progress.value = audio.currentTime;
+          timeDisplay.textContent = Math.floor(audio.currentTime) + "s";
+          if (audio.currentTime >= maxTime) {
+            audio.pause();
+            clearInterval(interval);
+            playBtn.innerHTML = "▶️ Écouter";
+          }
+        }, 100);
+      } else {
+        // Si l'audio est en train de jouer, on le met en pause
+        audio.pause();
+        clearInterval(interval);
+        playBtn.innerHTML = "▶️ Écouter";
+      }
+    });
+
+    // Ajouter cet événement pour réinitialiser le bouton quand l'audio se termine
+    audio.addEventListener("ended", () => {
+      playBtn.innerHTML = "▶️ Écouter";
       clearInterval(interval);
-      interval = setInterval(() => {
-        progress.value = audio.currentTime;
-        timeDisplay.textContent = Math.floor(audio.currentTime) + "s";
-        if (audio.currentTime >= maxTime) {
-          audio.pause();
-          clearInterval(interval);
-        }
-      }, 100);
     });
 
     input.addEventListener("input", () => {
       suggestionList.innerHTML = "";
+      suggestionList.classList.remove("active");
       const typed = input.value.toLowerCase();
       if (!typed) return;
       
@@ -378,10 +397,16 @@
         li.onclick = () => {
           input.value = title;
           suggestionList.innerHTML = "";
+          suggestionList.classList.remove("active");
           checkAnswer(input.value);
         };
         suggestionList.appendChild(li);
       });
+      
+      // Ajouter la classe active seulement s'il y a des suggestions
+      if (suggestionList.children.length > 0) {
+        suggestionList.classList.add("active");
+      }
     });
 
     input.addEventListener("keypress", (e) => {

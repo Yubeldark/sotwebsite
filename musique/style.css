@@ -1,114 +1,345 @@
+/* Polices personnalisées pour une ambiance pirate */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Spectral:wght@400;600&display=swap');
+
+/* Variables pour une meilleure maintenance */
+:root {
+  --primary-color: #00a8ff;
+  --secondary-color: #ffc107;
+  --accent-color: #ff5722;
+  --bg-dark: rgba(10, 20, 30, 0.85);
+  --text-light: #f8f8f8;
+  --scroll-thumb: #c8973b;
+  --correct-color: #4caf50;
+  --wrong-color: #e53935;
+}
+
 body {
   background: url('../images/background.jpg') no-repeat center center fixed;
   background-size: cover;
-  font-family: 'Segoe UI', sans-serif;
-  color: white;
+  font-family: 'Spectral', serif;
+  color: var(--text-light);
   margin: 0;
-  padding: 2em;
-  text-align: center;
+  padding: 0;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Effet de vagues sur le fond */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.2);
+  z-index: -1;
+  backdrop-filter: blur(2px);
 }
 
 .container {
-  background-color: rgba(0, 0, 0, 0.75);
-  padding: 2em;
-  max-width: 600px;
-  margin: auto;
-  border-radius: 12px;
-  box-shadow: 0 0 10px rgba(255,255,255,0.2);
+  background-color: var(--bg-dark);
+  padding: 2.5em;
+  width: 90%;
+  max-width: 650px;
+  margin: 2em auto;
+  border-radius: 1rem;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  border: 1px solid rgba(255,255,255,0.1);
+  position: relative;
+  overflow: hidden;
+  min-height: 550px;  /* Ajustez cette valeur selon votre design */
+}
+
+/* Effet de carte ancienne */
+.container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    radial-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+    radial-gradient(rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 20px 20px;
+  background-position: 0 0, 10px 10px;
+  pointer-events: none;
+  z-index: -1;
 }
 
 .site-logo {
-  width: 250px;
-  margin-bottom: 1em;
+  width: 200px;
+  margin-bottom: 1.5em;
   cursor: pointer;
+  transition: transform 0.3s ease;
+  filter: drop-shadow(0 5px 10px rgba(0,0,0,0.5));
+}
+
+.site-logo:hover {
+  transform: scale(1.05);
+}
+
+h1 {
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  font-size: 2.5rem;
+  margin-bottom: 0.2em;
+  color: var(--secondary-color);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+p {
+  font-size: 1.1rem;
+  margin-bottom: 1.5em;
+  opacity: 0.9;
 }
 
 input[type="text"] {
-  padding: 10px;
-  width: 80%;
-  font-size: 16px;
-  border-radius: 6px;
-  border: none;
-  margin: 10px 0;
+  padding: 12px 18px;
+  width: 85%;
+  font-size: 1.1rem;
+  font-family: 'Spectral', serif;
+  border-radius: 8px;
+  border: 2px solid rgba(255,255,255,0.1);
+  margin: 15px 0;
   text-align: center;
+  background-color: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  transition: all 0.3s ease;
+  color: #333;
+}
+
+input[type="text"]:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(0, 168, 255, 0.3);
 }
 
 #suggestionList {
   list-style: none;
   padding: 0;
   margin: 0 auto;
-  max-height: 150px;
-  overflow-y: auto;
-  width: 80%;
-  background: white;
-  border-radius: 6px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  width: 85%;
+  background-color: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  max-height: 0;
+  opacity: 0;
+  transition: max-height 0.4s ease-out, opacity 0.3s ease-out;
+}
+
+#suggestionList.active {
+  max-height: 200px;
+  opacity: 1;
+}
+
+#suggestionList::-webkit-scrollbar {
+  width: 6px;
+}
+
+#suggestionList::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+#suggestionList::-webkit-scrollbar-thumb {
+  background-color: var(--scroll-thumb);
+  border-radius: 3px;
 }
 
 #suggestionList li {
-  padding: 10px;
-  border-bottom: 1px solid #ccc;
+  padding: 10px 15px;
+  border-bottom: 1px solid #eee;
   cursor: pointer;
-  color: #111;
-  font-weight: 500;
-  background: #fff;
+  transition: background-color 0.2s ease;
+  color: #333;
+}
+
+#suggestionList li:last-child {
+  border-bottom: none;
 }
 
 #suggestionList li:hover {
-  background-color: #f0f0f0;
+  background-color: var(--secondary-color);
+  color: #000;
 }
 
 button {
-  background-color: #00aaff;
+  background-color: var(--primary-color);
   color: white;
   border: none;
-  padding: 10px 20px;
-  font-size: 16px;
-  border-radius: 6px;
+  padding: 12px 24px;
+  font-size: 1.1rem;
+  font-family: 'Cinzel', serif;
+  font-weight: 600;
+  border-radius: 8px;
   cursor: pointer;
-  margin: 10px;
-}
-
-button:hover {
-  background-color: #007acc;
-}
-
-#volumeSlider {
-  width: 150px;
-  margin: 10px;
-}
-
-progress {
-  width: 80%;
-  height: 10px;
-  margin: 10px auto;
-  display: block;
-  border-radius: 5px;
+  margin: 15px 0;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: relative;
   overflow: hidden;
 }
 
+button:hover {
+  background-color: #0089cc;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.25);
+}
+
+button:active {
+  transform: translateY(1px);
+}
+
+/* Effet de vague sur le bouton */
+button::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 150%;
+  height: 150%;
+  background: rgba(255,255,255,0.1);
+  transform: translate(-50%, -50%) scale(0);
+  border-radius: 50%;
+  transition: transform 0.6s;
+}
+
+button:active::after {
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 0;
+}
+
+#volumeSlider {
+  width: 180px;
+  height: 6px;
+  margin: 15px;
+  appearance: none;
+  background: rgba(255,255,255,0.2);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+#volumeSlider::-webkit-slider-thumb {
+  appearance: none;
+  width: 15px;
+  height: 15px;
+  background: var(--secondary-color);
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: -100vw 0 0 100vw rgba(255, 193, 7, 0.5);
+}
+
+#volumeSlider:focus {
+  outline: none;
+}
+
+progress {
+  width: 85%;
+  height: 8px;
+  margin: 15px auto;
+  display: block;
+  border-radius: 4px;
+  overflow: hidden;
+  appearance: none;
+}
+
 progress::-webkit-progress-bar {
-  background-color: #444;
+  background-color: rgba(255,255,255,0.2);
 }
 
 progress::-webkit-progress-value {
-  background-color: #ffc107;
-}
-
-#feedback {
-  margin-top: 10px;
-  font-size: 18px;
-  font-weight: bold;
+  background: linear-gradient(to right, #00a8ff, #009fdd);
 }
 
 #timeDisplay {
-  color: #ccc;
-  margin-bottom: 10px;
+  color: rgba(255,255,255,0.7);
+  font-size: 1rem;
+  margin: 10px 0;
+  font-family: 'Spectral', serif;
+}
+
+#feedback {
+  margin: 20px 0;
+  font-size: 1.3rem;
+  font-weight: bold;
+  min-height: 1.5em;
+  transition: all 0.3s ease;
 }
 
 #streak {
-  margin-top: 20px;
+  margin-top: 25px;
+  font-family: 'Cinzel', serif;
   font-weight: bold;
-  font-size: 18px;
-  color: gold;
+  font-size: 1.2rem;
+  color: var(--secondary-color);
+  text-shadow: 0 0 10px rgba(255, 193, 7, 0.5);
+  letter-spacing: 1px;
+}
+
+/* Animation pour le feedback */
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+#feedback.success {
+  color: var(--correct-color);
+  animation: pulse 0.5s ease-in-out;
+  text-shadow: 0 0 10px rgba(76, 175, 80, 0.7);
+}
+
+#feedback.success:before, #feedback.success:after {
+  content: '🏆';
+  margin: 0 10px;
+}
+
+#feedback.error {
+  color: var(--wrong-color);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .container {
+    width: 90%;
+    padding: 1.5em;
+    margin: 1em;
+  }
+  
+  h1 {
+    font-size: 2rem;
+  }
+  
+  input[type="text"] {
+    width: 90%;
+  }
+  
+  #suggestionList {
+    width: 90%;
+  }
+  
+  .site-logo {
+    width: 150px;
+  }
+}
+
+/* Animation pour le démarrage de la page */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.container {
+  animation: fadeIn 0.8s ease-out;
 }
