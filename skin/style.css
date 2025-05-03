@@ -128,6 +128,7 @@ tr.new-row td:nth-child(4) { animation-delay: 0.7s; }
 tr.new-row td:nth-child(5) { animation-delay: 0.9s; }
 tr.new-row td:nth-child(6) { animation-delay: 1.1s; }
 tr.new-row td:nth-child(7) { animation-delay: 1.3s; }
+tr.new-row td:nth-child(8) { animation-delay: 1.5s; }
 
 @keyframes flipIn {
   0% {
@@ -265,6 +266,212 @@ tr.new-row td:nth-child(7) { animation-delay: 1.3s; }
   0% { transform: scale(0); opacity: 0; }
   70% { transform: scale(1.1); opacity: 1; }
   100% { transform: scale(1); opacity: 1; }
+}
+
+.image-cell {
+  text-align: center;
+  vertical-align: middle;
+  padding: 5px;
+}
+
+.skin-image {
+  max-width: 90px;
+  max-height: 90px;
+  object-fit: contain;
+  animation: flipIn 0.8s cubic-bezier(0.36, 0.07, 0.19, 0.97) forwards;
+  animation-delay: 0.8s; /* Pour qu'elle apparaisse après les autres cellules */
+  opacity: 0;
+}
+
+/* S'assurer que la largeur de la colonne est suffisante */
+#guessTable th:last-child,
+#guessTable td:last-child {
+  width: 100px;
+}
+
+/* Styles pour la colonne d'images */
+#guessTable th:first-child,
+#guessTable td:first-child {
+  width: 100px;
+  text-align: center;
+  vertical-align: middle;
+  padding: 5px;
+}
+
+.image-cell {
+  background-color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.skin-image {
+  max-width: 90px;
+  max-height: 90px;
+  object-fit: contain;
+  animation: flipIn 0.8s cubic-bezier(0.36, 0.07, 0.19, 0.97) forwards;
+  opacity: 0;
+}
+
+/* Animation pour le texte de félicitations */
+.celebration-text {
+  display: block;
+  width: 100%;
+  font-weight: bold;
+  font-size: 1.5em;
+  color: gold;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
+  animation: celebrationPulse 1.5s infinite alternate;
+  margin-bottom: 5px;
+}
+
+@keyframes celebrationPulse {
+  0% {
+    transform: scale(1);
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.7);
+  }
+  100% {
+    transform: scale(1.1);
+    text-shadow: 0 0 20px rgba(255, 215, 0, 0.9), 0 0 30px rgba(255, 200, 0, 0.5);
+  }
+}
+
+/* Style pour le bouton Rejouer */
+.replay-button {
+  background: linear-gradient(to bottom, #4caf50, #2e7d32);
+  color: white;
+  font-weight: bold;
+  transform: scale(1);
+  transition: transform 0.3s ease;
+  animation: buttonPulse 2s infinite alternate;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  margin-top: 15px;
+  font-size: 1.1em;
+}
+
+.replay-button:hover {
+  transform: scale(1.05);
+  background: linear-gradient(to bottom, #43a047, #2e7d32);
+}
+
+@keyframes buttonPulse {
+  0% {
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.7);
+  }
+  100% {
+    box-shadow: 0 0 15px rgba(76, 175, 80, 0.9), 0 0 20px rgba(76, 175, 80, 0.5);
+  }
+}
+
+/* Animation de confettis */
+.confetti-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1000;
+}
+
+.confetti {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  top: -10px;
+  opacity: 0;
+  animation: confetti-fall 8s ease-out forwards;
+  transform: rotate(0deg);
+}
+
+@keyframes confetti-fall {
+  0% {
+    opacity: 0;
+    top: -10px;
+    transform: rotate(0deg);
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    top: 100%;
+    transform: rotate(720deg);
+  }
+}
+
+/* Style pour le message de succès */
+#feedback.success {
+  font-size: 1.1em;
+  color: #4caf50;
+  text-align: center;
+  margin: 15px 0;
+  padding: 15px;
+  border-radius: 8px;
+  background-color: rgba(76, 175, 80, 0.1);
+  border: 1px solid rgba(76, 175, 80, 0.3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Style pour le message d'échec */
+#feedback.failure {
+  font-size: 1.2em;
+  color: #f44336;
+  text-align: center;
+  margin: 15px 0;
+  padding: 10px;
+  border-radius: 8px;
+  background-color: rgba(244, 67, 54, 0.1);
+  border: 1px solid rgba(244, 67, 54, 0.3);
+}
+
+/* Assurer que le bouton est bien visible */
+#resetButton {
+  display: block;
+  margin: 15px auto;
+}
+
+/* Style pour le message de réussite */
+.success-message {
+  display: block;
+  width: 100%;
+  font-size: 1.1em;
+  margin-top: 5px;
+}
+
+/* Style pour les indicateurs de chronologie */
+.date-indicator {
+  display: inline-block;
+  margin-left: 8px;
+  font-size: 1.4em;
+  font-weight: bold;
+  animation: fadeInBounce 0.5s ease-out;
+}
+
+.earlier {
+  color: #ff5722; /* Orange plus foncé pour meilleur contraste */
+}
+
+.later {
+  color: #3f51b5; /* Bleu plus foncé pour meilleur contraste */
+}
+
+@keyframes fadeInBounce {
+  0% { opacity: 0; transform: translateY(10px); }
+  70% { opacity: 1; transform: translateY(-3px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* Style pour le tooltip au survol */
+td[title] {
+  position: relative;
+  cursor: help;
 }
 
 /* Responsive design */
