@@ -1,0 +1,124 @@
+
+body {
+  background: url('../images/background.jpg') no-repeat center center fixed;
+  background-size: cover;
+  font-family: sans-serif;
+  color: white;
+  text-align: center;
+  margin: 0;
+  padding: 2em;
+}
+
+.music-container {
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 2em;
+  border-radius: 12px;
+  display: inline-block;
+  width: 90%;
+  max-width: 600px;
+}
+
+h1 {
+  margin-bottom: 1em;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1em;
+  align-items: center;
+  justify-content: center;
+  margin: 1em 0;
+}
+
+button {
+  padding: 0.6em 1.2em;
+  font-size: 16px;
+  background-color: #f4c542;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #ddb328;
+}
+
+input[type="range"] {
+  width: 120px;
+}
+
+#guess {
+  padding: 10px;
+  width: 80%;
+  border-radius: 6px;
+  border: none;
+  font-size: 16px;
+  margin-top: 20px;
+}
+
+.suggestions {
+  margin-top: 10px;
+}
+
+.suggestion {
+  background: #f8d768;
+  color: black;
+  padding: 8px;
+  margin: 5px auto;
+  width: 80%;
+  max-width: 300px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.suggestion:hover {
+  background-color: #f8cccc;
+}
+
+.result {
+  margin-top: 15px;
+  font-size: 18px;
+}
+
+
+
+/* Barre de lecture - moderne, épaisse, jaune/orange */
+#progress {
+  appearance: none;
+  width: 250px;
+  height: 10px;
+  background: #f4c542;
+  border-radius: 5px;
+  outline: none;
+}
+#progress::-webkit-slider-thumb {
+  appearance: none;
+  height: 18px;
+  width: 18px;
+  background: white;
+  border: 2px solid #333;
+  border-radius: 50%;
+  cursor: pointer;
+  margin-top: -4px;
+}
+
+/* Barre de volume - moderne, fine, bleue */
+#volumeSlider {
+  appearance: none;
+  width: 100px;
+  height: 6px;
+  background: #4ecdc4;
+  border-radius: 4px;
+  outline: none;
+}
+#volumeSlider::-webkit-slider-thumb {
+  appearance: none;
+  height: 14px;
+  width: 14px;
+  background: white;
+  border: 2px solid #333;
+  border-radius: 50%;
+  cursor: pointer;
+  margin-top: -4px;
+}

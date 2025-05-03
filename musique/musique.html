@@ -1,0 +1,114 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Musiques pirates</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="music-container">
+    <h1>🎼 Musiques pirates</h1>
+
+    <audio id="audio" src="Sea of Thieves Season 15_ Official Title Screen Reveal.mp3"></audio>
+
+    <div class="controls">
+      <button id="playPauseBtn">▶️ Play</button>
+      <input type="range" id="progress" value="0" min="0" max="10" step="0.1">
+      <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="1">
+      <span id="timeDisplay">0:00 / 0:10</span>
+    </div>
+
+    <input type="text" id="guess" placeholder="Entrez un titre..." autocomplete="off">
+    <div class="suggestions" id="suggestions"></div>
+    <div id="result" class="result"></div>
+  </div>
+
+  <script>
+    const audio = document.getElementById("audio");
+    const playPauseBtn = document.getElementById("playPauseBtn");
+    const progress = document.getElementById("progress");
+    const volumeSlider = document.getElementById("volumeSlider");
+    const timeDisplay = document.getElementById("timeDisplay");
+    const guessInput = document.getElementById("guess");
+    const suggestionsContainer = document.getElementById("suggestions");
+    const result = document.getElementById("result");
+
+    const musics = [
+      "Title Screen",
+      "Shanty of the Deep",
+      "We Shall Sail Together",
+      "Becalmed"
+    ];
+    const correctAnswer = "title screen";
+
+    function formatTime(seconds) {
+      const min = Math.floor(seconds / 60);
+      const sec = Math.floor(seconds % 60).toString().padStart(2, '0');
+      return `${min}:${sec}`;
+    }
+
+    function updateProgress() {
+      progress.value = audio.currentTime;
+      timeDisplay.textContent = formatTime(audio.currentTime) + " / 0:10";
+    }
+
+    playPauseBtn.addEventListener("click", () => {
+      if (audio.paused) {
+        audio.currentTime = 0;
+        audio.play();
+        playPauseBtn.textContent = "⏸️ Pause";
+      } else {
+        audio.pause();
+        playPauseBtn.textContent = "▶️ Play";
+      }
+    });
+
+    audio.addEventListener("timeupdate", () => {
+      if (audio.currentTime >= 10) {
+        audio.pause();
+        audio.currentTime = 0;
+        playPauseBtn.textContent = "▶️ Play";
+      }
+      updateProgress();
+    });
+
+    progress.addEventListener("input", () => {
+      audio.currentTime = progress.value;
+    });
+
+    volumeSlider.addEventListener("input", () => {
+      audio.volume = volumeSlider.value;
+    });
+
+    guessInput.addEventListener("input", () => {
+      const input = guessInput.value.toLowerCase();
+      suggestionsContainer.innerHTML = "";
+      if (input === "") return;
+      musics.forEach(music => {
+        if (music.toLowerCase().startsWith(input)) {
+          const suggestion = document.createElement("div");
+          suggestion.className = "suggestion";
+          suggestion.textContent = music;
+          suggestion.addEventListener("click", () => {
+            guessInput.value = music;
+            suggestionsContainer.innerHTML = "";
+            checkAnswer(music);
+          });
+          suggestionsContainer.appendChild(suggestion);
+        }
+      });
+    });
+
+    function checkAnswer(name) {
+      if (name.toLowerCase() === correctAnswer) {
+        result.textContent = "🎉 Bonne réponse !";
+        result.style.color = "lime";
+      } else {
+        result.textContent = "❌ Mauvaise réponse.";
+        result.style.color = "crimson";
+      }
+    }
+  </script>
+</body>
+</html>
