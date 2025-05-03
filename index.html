@@ -1,45 +1,62 @@
 <!DOCTYPE html>
 <html lang="fr">
-<head>
-  <meta charset="UTF-8" />
-  <title>Sea of Thieves - Jeux du jour</title>
-  <link rel="stylesheet" href="home.css" />
-  <link rel="icon" href="images/favicon.ico" type="image/x-icon" />
-</head>
-<body>
-  <div class="main-container">
-    <img src="images/logo_sotdle.png" alt="Logo SOTDLE" style="height: 200px; margin-bottom: 5px;" />
-    <p class="subtitle">Mini-jeux quotidiens</p>
-    <div class="game-list">
-      <a href="phrase/" class="game-card">
-        <div class="icon">💬</div>
-        <div class="text">
-          <div class="title">Qui parle ?</div>
-          <div class="desc">Devine avec une phrase prononcée</div>
-        </div>
+  <head>
+    <meta charset="UTF-8" />
+    <title>SOT DLE - Mini jeux quotidiens Sea of Thieves</title>
+    <link rel="stylesheet" href="home.css" />
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon" />
+    <script src="js/language.js"></script>
+  </head>
+  <body>
+    <!-- Image de fond ajoutée directement comme élément HTML -->
+    <div class="background-image"></div>
+    
+    <div class="main-container">
+      <div class="language-selector">
+        <a href="#" class="language-option active" data-lang="fr">
+          <img src="images/flag-fr.png" alt="Français" class="flag-icon">
+        </a>
+        <a href="#" class="language-option" data-lang="en">
+          <img src="images/flag-en.png" alt="English" class="flag-icon">
+        </a>
+      </div>
+      
+      <a href="index.html" title="Retour à l'accueil">
+        <img src="images/logo_sotdle.png" alt="Logo SOTDLE" class="logo-sotdle">
       </a>
-      <a href="skin/" class="game-card">
-        <div class="icon">🎭</div>
-        <div class="text">
-          <div class="title">Skin mystère</div>
-          <div class="desc">Trouve le skin du jour</div>
-        </div>
-      </a>
-      <a href="musique/" class="game-card">
-        <div class="icon">🎵</div>
-        <div class="text">
-          <div class="title">Musique pirate</div>
-          <div class="desc">Devine avec un extrait audio</div>
-        </div>
-      </a>
-      <a href="map/" class="game-card">
-        <div class="icon">🗺️</div>
-        <div class="text">
-          <div class="title">Île floutée</div>
-          <div class="desc">Trouve l’île à partir d’une carte</div>
-        </div>
-      </a>
+      <p class="subtitle">Mini-jeux quotidiens</p>
+      
+      <!-- Nouvelle structure avec des images cliquables et des logos -->
+      <div class="category-container">
+        <a href="phrase/" class="category-item">
+          <img src="images/categorie.png" alt="Fond catégorie" class="category-image">
+          <img src="images/icon_talk.png" alt="Logo Qui parle" class="category-logo">
+          <div class="category-title" data-i18n="title-quiparle">Qui parle ?</div>
+        </a>
+        
+        <a href="bateau/" class="category-item">
+          <img src="images/categorie.png" alt="Fond catégorie" class="category-image">
+          <img src="images/icon_skin.png" alt="Skin mystere" class="category-logo">
+          <div class="category-title" data-i18n="title-quelbateau">Quel bateau ?</div>
+        </a>
+        
+        <a href="ile/" class="category-item">
+          <img src="images/categorie.png" alt="Fond catégorie" class="category-image">
+          <img src="images/icon_blindtest.png" alt="Logo Île" class="category-logo">
+          <div class="category-title" data-i18n="title-quelilepirate">Quelle île pirate ?</div>
+        </a>
+        
+        <a href="armes/" class="category-item">
+          <img src="images/categorie.png" alt="Fond catégorie" class="category-image">
+          <img src="images/icon_isle.png" alt="Logo Armes" class="category-logo">
+          <div class="category-title" data-i18n="title-quellesarmes">Quelles armes ?</div>
+        </a>
+      </div>
+      
+      <!-- Votre liste de jeux originale (masquée par le CSS) -->
+      <div class="game-list">
+        <!-- ...existing code... -->
+      </div>
     </div>
-  </div>
-</body>
+  </body>
 </html>
