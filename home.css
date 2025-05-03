@@ -1,72 +1,66 @@
 
 body {
   margin: 0;
-  padding: 0;
-  background-image: url("images/background.jpg");
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-image: url('images/mainmenu.jpeg');
   background-size: cover;
   background-position: center;
-  background-attachment: fixed;
-  font-family: 'Georgia', serif;
-  color: #fffbe0;
+  color: white;
 }
 
 .main-container {
   text-align: center;
-  padding: 3em 1em;
-  background-color: rgba(0, 0, 0, 0.6);
-  max-width: 800px;
-  margin: 5vh auto;
-  border-radius: 15px;
-  box-shadow: 0 0 20px #000;
-}
-
-h1 {
-  font-size: 2.5em;
-  margin-bottom: 0.2em;
+  padding: 40px 20px;
+  background-color: rgba(0, 0, 0, 0.5);
+  margin: 50px auto;
+  width: 90%;
+  max-width: 700px;
+  border-radius: 20px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.3);
 }
 
 .subtitle {
-  font-size: 1.2em;
-  margin-bottom: 2em;
-  color: #ffefb0;
+  font-size: 20px;
+  margin-bottom: 30px;
+  color: #ffd;
 }
 
 .game-list {
   display: flex;
   flex-direction: column;
-  gap: 1em;
+  gap: 20px;
 }
 
 .game-card {
-  background-color: rgba(255, 244, 210, 0.9);
-  color: #222;
-  padding: 1em;
-  border-radius: 12px;
-  text-decoration: none;
   display: flex;
   align-items: center;
-  gap: 1em;
-  transition: background-color 0.3s;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  background-color: #fff1c0;
+  border-radius: 12px;
+  text-decoration: none;
+  color: black;
+  padding: 15px 20px;
+  transition: background-color 0.3s ease;
 }
 
 .game-card:hover {
-  background-color: #ffe27d;
+  background-color: #ffe58f;
 }
 
-.game-card .icon {
-  font-size: 2em;
-  background: #f0e6c0;
-  padding: 0.3em 0.6em;
-  border-radius: 8px;
+.icon {
+  font-size: 32px;
+  margin-right: 20px;
+}
+
+.text {
+  text-align: left;
 }
 
 .title {
   font-weight: bold;
-  font-size: 1.2em;
+  font-size: 20px;
 }
 
 .desc {
-  font-size: 0.9em;
+  font-size: 14px;
   color: #444;
 }
