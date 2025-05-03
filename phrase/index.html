@@ -76,20 +76,29 @@
         suggestions.innerHTML = "";
         if (input.length < 1) return;
 
+        
         const matches = characters
-          .map(c => c.name)
-          .filter(name => name.toLowerCase().startsWith(input))
+          .filter(c => c.name.toLowerCase().startsWith(input))
           .slice(0, 5);
 
-        matches.forEach(name => {
+        matches.forEach(c => {
           const li = document.createElement("li");
-          li.textContent = name;
+          li.classList.add("suggestion");
+          const img = document.createElement("img");
+          img.src = `../images/${c.name.toLowerCase()}.png`;
+          img.alt = c.name;
+          img.onerror = () => img.style.display = "none";
+          const span = document.createElement("span");
+          span.textContent = c.name;
+          li.appendChild(img);
+          li.appendChild(span);
           li.onclick = () => {
-            inputField.value = name;
+            inputField.value = c.name;
             suggestions.innerHTML = "";
           };
           suggestions.appendChild(li);
         });
+
       });
 
       document.addEventListener("click", (e) => {
