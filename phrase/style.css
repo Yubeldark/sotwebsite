@@ -26,12 +26,16 @@ h1 {
 }
 
 .quote-box {
-  background-color: #f5e6b3;
+  background-color: #fff9da;
+  color: #2c1e00;
   padding: 1em;
-  border-radius: 8px;
+  border-radius: 10px;
   margin-bottom: 1em;
   font-style: italic;
-  border: 2px solid #d5a253;
+  font-size: 1.2em;
+  line-height: 1.5;
+  border: 2px solid #e0c075;
+  box-shadow: 0 0 8px rgba(0,0,0,0.3);
 }
 
 input,
@@ -75,11 +79,28 @@ button:hover {
   background-color: #fffbe5;
   color: #222;
   border: 1px solid #ccc;
-  max-height: 150px;
+  max-height: 180px;
   overflow-y: auto;
   font-size: 0.9em;
-  padding: 0.5em;
   border-radius: 0 0 10px 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  margin: 0 auto;
+  width: 80%;
+  padding: 0.3em 0;
+}
+
+.suggestion {
+  padding: 0.4em 0.6em;
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+}
+
+.suggestion img {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
 .suggestion:hover {
