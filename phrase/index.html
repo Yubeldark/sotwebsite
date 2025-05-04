@@ -1,139 +1,62 @@
 <!DOCTYPE html>
 <html lang="fr">
-<head>
+  <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Qui parle ?</title>
-    <link rel="icon" type="image/png" href="images/wonda.png"/>
-    <link rel="stylesheet" href="style.css"/>
-    <link rel="icon" href="../images/favicon.ico" type="image/x-icon" />
-</head>
-<body>
-    <div class="container">
-        <img src="../images/logo_sotdle.png" alt="Logo SOTDLE" class="site-logo" onclick="window.location.href='../index.html'"/>
-        <h1><span class="emoji">🎤</span> Qui parle ?</h1>
-        <div class="quote-box">
-            <p class="quote" id="quote">"You break it, you buy it!"</p>
-        </div>
-        <input type="text" id="guess" placeholder="Entrez un nom..." autocomplete="off"/>
-        <div class="suggestions" id="suggestions"></div>
-        <div class="buttons">
-            <button onclick="checkAnswer()">Valider</button>
-            <button onclick="shareResult()"><span class="emoji">📩</span> Partager</button>
-        </div>
-        <p class="result" id="result"></p>
-        <p class="countdown"><span class="emoji">⏳</span> Prochaine question dans <span id="timer"></span></p>
+    <title>SOT DLE - Mini jeux quotidiens Sea of Thieves</title>
+    <link rel="stylesheet" href="home.css" />
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon" />
+    <script src="js/language.js"></script>
+  </head>
+  <body>
+    <!-- Image de fond ajoutée directement comme élément HTML -->
+    <div class="background-image"></div>
+    
+    <div class="main-container">
+      <div class="language-selector">
+        <a href="#" class="language-option active" data-lang="fr">
+          <img src="images/flag-fr.png" alt="Français" class="flag-icon">
+        </a>
+        <a href="#" class="language-option" data-lang="en">
+          <img src="images/flag-en.png" alt="English" class="flag-icon">
+        </a>
+      </div>
+      
+      <a href="index.html" title="Retour à l'accueil">
+        <img src="images/logo_sotdle.png" alt="Logo SOTDLE" class="logo-sotdle">
+      </a>
+      <p class="subtitle">Mini-jeux quotidiens</p>
+      
+      <!-- Nouvelle structure avec des images cliquables et des logos -->
+      <div class="category-container">
+        <a href="phrase/" class="category-item">
+          <img src="images/categorie.png" alt="Fond catégorie" class="category-image">
+          <img src="images/icon_talk.png" alt="Logo Qui parle" class="category-logo">
+          <div class="category-title" data-i18n="title-quiparle">Qui parle ?</div>
+        </a>
+        
+        <a href="bateau/" class="category-item">
+          <img src="images/categorie.png" alt="Fond catégorie" class="category-image">
+          <img src="images/icon_skin.png" alt="Skin mystere" class="category-logo">
+          <div class="category-title" data-i18n="title-quelbateau">Quel bateau ?</div>
+        </a>
+        
+        <a href="ile/" class="category-item">
+          <img src="images/categorie.png" alt="Fond catégorie" class="category-image">
+          <img src="images/icon_blindtest.png" alt="Logo Île" class="category-logo">
+          <div class="category-title" data-i18n="title-quelilepirate">Quelle île pirate ?</div>
+        </a>
+        
+        <a href="armes/" class="category-item">
+          <img src="images/categorie.png" alt="Fond catégorie" class="category-image">
+          <img src="images/icon_isle.png" alt="Logo Armes" class="category-logo">
+          <div class="category-title" data-i18n="title-quellesarmes">Quelles armes ?</div>
+        </a>
+      </div>
+      
+      <!-- Votre liste de jeux originale (masquée par le CSS) -->
+      <div class="game-list">
+        <!-- ...existing code... -->
+      </div>
     </div>
-
-    <script>
-    const characters = [
-        { name: "Wonda", quote: "You break it, you buy it!", image: "../images/wonda.png" },
-        { name: "Larinna", quote: "I’ve got work for someone of your… talents.", image: "../images/larinna.png" },
-        { name: "Merrick", quote: "I've lost my legs twice. Once to a shark, and once to grog.", image: "../images/derrick.png" },
-        { name: "The Mysterious Stranger", quote: "You're not the first to seek the secrets of the Sea of Thieves.", image: "../images/mysterious_stranger.png" }
-    ];
-
-    const lockedImage = "images/ps-locked-item.png";
-    const guessInput = document.getElementById("guess");
-    const suggestionsContainer = document.getElementById("suggestions");
-    const resultBox = document.getElementById("result");
-    const quoteBox = document.getElementById("quote");
-
-    const startDate = new Date("2024-01-01");
-    const today = new Date();
-    today.setHours(0,0,0,0);
-    const index = Math.floor((today - startDate) / (1000*60*60*24)) % characters.length;
-    const current = characters[index];
-    quoteBox.textContent = `"${current.quote}"`;
-
-    const hasAnswered = localStorage.getItem("answered-" + index);
-    if (hasAnswered) {
-        guessInput.disabled = true;
-        guessInput.value = "Revenez demain";
-        guessInput.classList.add("disabled");
-    }
-
-    guessInput.addEventListener("input", () => {
-        const input = guessInput.value.trim().toLowerCase();
-        suggestionsContainer.innerHTML = "";
-        if (input === "") return;
-
-        characters.forEach(char => {
-            if (char.name.toLowerCase().startsWith(input)) {
-                const suggestion = document.createElement("div");
-                suggestion.className = "suggestion";
-                suggestion.innerHTML = `
-                    <img src="${char.image}" alt="${char.name}"/>
-                    <span>${char.name}</span>
-                `;
-                if (hasAnswered && char.name !== current.name) {
-                    suggestion.classList.add("locked");
-                } else {
-                    suggestion.addEventListener("click", () => {
-                        guessInput.value = char.name;
-                        suggestionsContainer.innerHTML = "";
-                    });
-                }
-                suggestionsContainer.appendChild(suggestion);
-            }
-        });
-    });
-
-    function checkAnswer() {
-        const userInput = guessInput.value.trim().toLowerCase();
-        const correct = current.name.toLowerCase();
-
-        if (userInput === correct) {
-            resultBox.textContent = "🎉 Bravo, bonne réponse !";
-            resultBox.style.color = "lime";
-            localStorage.setItem("answered-" + index, "true");
-            guessInput.disabled = true;
-            guessInput.value = "Revenez demain";
-            guessInput.classList.add("disabled");
-
-            launchConfetti();
-        } else {
-            resultBox.textContent = "❌ Mauvaise réponse.";
-            resultBox.style.color = "crimson";
-            const wrongItem = Array.from(document.querySelectorAll(".suggestion")).find(s => s.textContent.trim() === guessInput.value);
-            if (wrongItem) {
-                wrongItem.classList.add("locked");
-                const overlay = document.createElement("img");
-                overlay.src = lockedImage;
-                overlay.className = "lock-overlay";
-                wrongItem.appendChild(overlay);
-            }
-        }
-    }
-
-    function shareResult() {
-        const shareText = `La citation du jour : "${current.quote}"`;
-        navigator.clipboard.writeText(shareText).then(() => {
-            alert("Citation copiée !");
-        });
-    }
-
-    function updateTimer() {
-        const now = new Date();
-        const tomorrow = new Date();
-        tomorrow.setHours(24, 0, 0, 0);
-        const diff = Math.floor((tomorrow - now) / 1000);
-        const hours = String(Math.floor(diff / 3600)).padStart(2, '0');
-        const minutes = String(Math.floor((diff % 3600) / 60)).padStart(2, '0');
-        const seconds = String(diff % 60).padStart(2, '0');
-        document.getElementById("timer").textContent = `${hours}:${minutes}:${seconds}`;
-    }
-
-    setInterval(updateTimer, 1000);
-    updateTimer();
-
-    function launchConfetti() {
-        const confetti = document.createElement("div");
-        confetti.className = "confetti";
-        confetti.innerHTML = "<h2>🎊 Félicitations ! 🎊</h2>";
-        document.body.appendChild(confetti);
-        setTimeout(() => confetti.remove(), 4000);
-    }
-    </script>
-</body>
+  </body>
 </html>
