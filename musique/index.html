@@ -13,13 +13,23 @@
     <h1>🎵 Musique pirate</h1>
     <p>Devine la musique avec un extrait !</p>
 
-    <button id="playBtn">▶️ Écouter</button>
-    <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="1">
+    <!-- Mise à jour des contrôles audio avec icône de volume -->
+    <div class="audio-controls">
+      <button id="playBtn">▶️ Écouter</button>
+      <button id="stopBtn">⏹️ Stop</button>
+      <div class="volume-control">
+        <span class="volume-icon">🔊</span>
+        <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="1" title="Volume">
+      </div>
+    </div>
     <progress id="progress" value="0" max="5"></progress>
-    <div id="timeDisplay">0s</div>
+    <div id="timeDisplay">00:00 / 00:00</div>
 
-    <input type="text" id="answerInput" placeholder="Entrez un titre..." autocomplete="off">
-    <ul id="suggestionList"></ul>
+    <div class="search-container">
+      <input type="text" id="answerInput" placeholder="Entrez un titre..." autocomplete="off">
+      <span class="suggestion-indicator">▼</span>
+      <ul id="suggestionList"></ul>
+    </div>
 
     <p id="feedback"></p>
     <p id="streak">Série : 0</p>
@@ -265,6 +275,7 @@
     let chosen;
     let audio = document.getElementById("audio");
     const playBtn = document.getElementById("playBtn");
+    const stopBtn = document.getElementById("stopBtn");
     const volumeSlider = document.getElementById("volumeSlider");
     const progress = document.getElementById("progress");
     const timeDisplay = document.getElementById("timeDisplay");
@@ -289,22 +300,66 @@
     let interval;
     let guessed;
 
-    function normalizeText(text) {
-      return text.trim().toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+    // Ajouter après la déclaration des variables, avant le code existant
+
+    // Tableau pour suivre les musiques déjà jouées dans cette session
+    let playedMusics = [];
+
+    // Fonction améliorée pour sélectionner une nouvelle musique sans répétition
+    function selectNewMusic() {
+      // Si toutes les musiques ont été jouées, réinitialiser le tableau
+      if (playedMusics.length >= musics.length - 1) {
+        playedMusics = [];
+      }
+      
+      // Filtrer les musiques qui n'ont pas encore été jouées
+      const availableMusics = musics.filter(music => !playedMusics.includes(music));
+      
+      // Sélectionner une musique aléatoire parmi celles disponibles
+      const selectedMusic = availableMusics[Math.floor(Math.random() * availableMusics.length)];
+      
+      // Ajouter la musique sélectionnée à la liste des musiques déjà jouées
+      playedMusics.push(selectedMusic);
+      
+      return selectedMusic;
     }
 
+    // Fonction pour normaliser les textes (supprimer les accents et autres caractères spéciaux)
+    function normalizeText(text) {
+      return text.trim()
+             .toLowerCase()
+             .normalize('NFD')
+             .replace(/[\u0300-\u036f]/g, '') // Supprime les accents et diacritiques
+             .replace(/[^a-z0-9\s]/gi, '');   // Supprime les caractères spéciaux
+    }
+
+    // Fonction pour formater le temps en MM:SS
+    function formatTime(seconds) {
+      const minutes = Math.floor(seconds / 60);
+      const remainingSeconds = Math.floor(seconds % 60);
+      return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+    }
+
+    // Mise à jour de la fonction newRound pour initialiser l'affichage du temps
     function newRound() {
-      chosen = musics[Math.floor(Math.random() * musics.length)];
+      chosen = selectNewMusic();
       audio.src = chosen.file;
-      maxTime = 5;
+      maxTime = 5; // Ou la durée maximale que vous voulez
       attempts = 0;
       guessed = false;
       input.disabled = false;
       input.value = "";
       feedback.textContent = "";
-      timeDisplay.textContent = "0s";
+      
+      // Mise à jour de l'affichage du temps avec le format MM:SS
+      timeDisplay.textContent = `00:00 / ${formatTime(maxTime)}`;
+      
       progress.value = 0;
+      progress.max = maxTime;
       playBtn.innerHTML = "▶️ Écouter";
+      
+      // Réinitialiser la liste des suggestions déjà utilisées pour cette manche
+      usedSuggestions = [];
     }
 
     function checkAnswer(guess) {
@@ -328,6 +383,11 @@
         feedback.textContent = `❌ Faux (${attempts}/3)`;
         feedback.style.color = "crimson";
         maxTime = Math.min(maxTime + 5, 15);
+        
+        // Mettre à jour la barre de progression pour qu'elle s'adapte à la nouvelle durée
+        progress.max = maxTime;
+        timeDisplay.textContent = `${formatTime(audio.currentTime)} / ${formatTime(maxTime)}`;
+        
         if (attempts >= 3) {
           feedback.textContent = "💀 Perdu ! Réponse : " + chosen.title;
           input.disabled = true;
@@ -346,23 +406,38 @@
       audio.volume = volumeSlider.value;
     });
 
+    // Ajouter l'événement pour le bouton play
     playBtn.addEventListener("click", () => {
       if (audio.paused) {
-        // Si l'audio est en pause, on le joue
-        audio.currentTime = 0;
-        progress.max = maxTime;
-        timeDisplay.textContent = "0s";
+        // Si l'audio était en pause et que la position est au maximum, le remettre à zéro
+        if (audio.currentTime >= maxTime) {
+          audio.currentTime = 0;
+          progress.value = 0;
+        }
+        
         audio.play();
         playBtn.innerHTML = "⏸️ Pause";
-
-        clearInterval(interval);
+        
+        // Démarrer l'intervalle pour mettre à jour le temps et la progression
         interval = setInterval(() => {
-          progress.value = audio.currentTime;
-          timeDisplay.textContent = Math.floor(audio.currentTime) + "s";
-          if (audio.currentTime >= maxTime) {
+          const currentTime = Math.min(audio.currentTime, maxTime);
+          
+          // S'assurer que la valeur maximale de la barre de progression est alignée avec maxTime
+          progress.max = maxTime;
+          progress.value = currentTime;
+          
+          // Mettre à jour l'affichage du temps au format MM:SS / MM:SS
+          timeDisplay.textContent = `${formatTime(currentTime)} / ${formatTime(maxTime)}`;
+          
+          if (currentTime >= maxTime) {
             audio.pause();
             clearInterval(interval);
             playBtn.innerHTML = "▶️ Écouter";
+            
+            // Réinitialiser la position audio mais conserver la position visuelle de la barre de progression
+            // pour indiquer que l'extrait est terminé
+            audio.currentTime = 0; // Remettre la position audio à zéro
+            timeDisplay.textContent = `00:00 / ${formatTime(maxTime)}`; // Mettre à jour l'affichage du temps
           }
         }, 100);
       } else {
@@ -373,46 +448,321 @@
       }
     });
 
+    // Ajouter l'événement pour le bouton stop
+    stopBtn.addEventListener("click", () => {
+      audio.pause();
+      audio.currentTime = 0; // Remettre le son au début
+      clearInterval(interval);
+      playBtn.innerHTML = "▶️ Écouter";
+      progress.value = 0;
+      timeDisplay.textContent = `00:00 / ${formatTime(maxTime)}`;
+    });
+
     // Ajouter cet événement pour réinitialiser le bouton quand l'audio se termine
     audio.addEventListener("ended", () => {
       playBtn.innerHTML = "▶️ Écouter";
       clearInterval(interval);
+      progress.value = 0;
+      timeDisplay.textContent = `00:00 / ${formatTime(maxTime)}`;
     });
+
+    // Ajouter cet événement pour réinitialiser le bouton quand l'audio se termine naturellement
+    audio.addEventListener("ended", () => {
+      playBtn.innerHTML = "▶️ Écouter";
+      clearInterval(interval);
+      
+      // On ne réinitialise pas progress.value ici pour montrer que l'extrait a été écouté
+      // Mais on remet la position audio à zéro pour pouvoir rejouer immédiatement
+      audio.currentTime = 0;
+      timeDisplay.textContent = `00:00 / ${formatTime(maxTime)}`;
+    });
+
+    // Mettre à jour l'affichage du temps lors du chargement de l'audio
+    audio.addEventListener("loadedmetadata", () => {
+      // Si vous voulez utiliser la durée réelle du fichier audio au lieu d'une valeur fixe
+      // maxTime = Math.min(audio.duration, votre_limite_maximale);
+      timeDisplay.textContent = `00:00 / ${formatTime(maxTime)}`;
+    });
+
+    // Gérer les suggestions de manière plus fluide
+    let selectedIndex = -1;
+
+    // Variables pour suivre les suggestions déjà proposées dans la manche actuelle
+    let usedSuggestions = [];
 
     input.addEventListener("input", () => {
       suggestionList.innerHTML = "";
-      suggestionList.classList.remove("active");
       const typed = input.value.toLowerCase();
-      if (!typed) return;
+      selectedIndex = -1;
       
-      // Filtrer les titres qui contiennent le texte saisi
+      if (!typed) {
+        suggestionList.classList.remove("active");
+        return;
+      }
+      
+      // Filtrer les titres qui contiennent le texte saisi et n'ont pas été utilisés dans cette manche
       const matchingTitles = allTitles.filter(t => 
-        normalizeText(t).includes(normalizeText(typed))
+        normalizeText(t).includes(normalizeText(typed)) && !usedSuggestions.includes(t)
       );
       
-      // Limiter à 5 suggestions maximum pour une meilleure UX
-      matchingTitles.slice(0, 5).forEach(title => {
+      if (matchingTitles.length === 0) {
+        suggestionList.classList.remove("active");
+        return;
+      }
+      
+      // Mettre à jour la partie qui crée les suggestions pour améliorer la mise en évidence
+      matchingTitles.slice(0, 8).forEach((title, index) => {
         const li = document.createElement("li");
-        li.textContent = title;
+        
+        // Amélioration de la mise en surbrillance des caractères correspondants
+        const titleLower = title.toLowerCase();
+        const typedLower = normalizeText(typed.toLowerCase());
+        
+        // Rechercher toutes les occurrences du texte saisi
+        let html = title;
+        let matchIndex = normalizeText(titleLower).indexOf(typedLower);
+        
+        if (matchIndex !== -1) {
+          html = '';
+          let lastIndex = 0;
+          
+          // Traiter toutes les occurrences du texte recherché
+          while (matchIndex !== -1) {
+            // Ajouter le texte avant la correspondance
+            html += title.substring(lastIndex, matchIndex);
+            
+            // Ajouter la partie correspondante avec mise en surbrillance
+            html += `<strong>${title.substring(matchIndex, matchIndex + typed.length)}</strong>`;
+            
+            // Mettre à jour les indices
+            lastIndex = matchIndex + typed.length;
+            matchIndex = normalizeText(titleLower).indexOf(typedLower, lastIndex);
+          }
+          
+          // Ajouter tout texte restant
+          if (lastIndex < title.length) {
+            html += title.substring(lastIndex);
+          }
+        }
+        
+        li.innerHTML = html;
+        li.dataset.index = index;
         li.onclick = () => {
           input.value = title;
           suggestionList.innerHTML = "";
           suggestionList.classList.remove("active");
+          
+          // Ajouter le titre utilisé à la liste des suggestions utilisées
+          usedSuggestions.push(title);
+          
           checkAnswer(input.value);
         };
         suggestionList.appendChild(li);
       });
       
-      // Ajouter la classe active seulement s'il y a des suggestions
-      if (suggestionList.children.length > 0) {
-        suggestionList.classList.add("active");
+      suggestionList.classList.add("active");
+    });
+
+    // Navigation au clavier dans les suggestions
+    input.addEventListener("keydown", (e) => {
+      const suggestions = suggestionList.querySelectorAll("li");
+      const maxIndex = suggestions.length - 1;
+      
+      // Flèche bas
+      if (e.key === "ArrowDown") {
+        e.preventDefault();
+        selectedIndex = Math.min(selectedIndex + 1, maxIndex);
+        updateSelection(suggestions);
+        
+        // Cas spécial pour le dernier élément
+        if (selectedIndex === maxIndex) {
+          suggestionList.scrollTop = suggestionList.scrollHeight; // Scroll jusqu'au bout
+        }
+      } 
+      
+      // Flèche haut
+      else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        selectedIndex = Math.max(selectedIndex - 1, -1);
+        updateSelection(suggestions);
+      } 
+      
+      // Touche Entrée
+      else if (e.key === "Enter") {
+        if (selectedIndex >= 0 && selectedIndex <= maxIndex) {
+          e.preventDefault();
+          const selected = suggestions[selectedIndex];
+          // Utiliser textContent au lieu de innerHTML pour éviter les problèmes avec les balises HTML
+          const cleanText = selected.textContent.replace(/\s+/g, ' ').trim();
+          input.value = cleanText;
+          
+          // Ajouter le titre à la liste des suggestions utilisées
+          usedSuggestions.push(cleanText);
+          
+          suggestionList.classList.remove("active");
+          checkAnswer(cleanText);
+          selectedIndex = -1;
+        } else {
+          // Si aucune suggestion n'est sélectionnée, ajouter aussi la valeur à la liste des utilisées
+          usedSuggestions.push(input.value);
+          checkAnswer(input.value);
+        }
+      } 
+      
+      // Touche Échap
+      else if (e.key === "Escape") {
+        suggestionList.classList.remove("active");
+        input.blur();
+        selectedIndex = -1;
       }
     });
 
-    input.addEventListener("keypress", (e) => {
-      if (e.key === "Enter") {
-        checkAnswer(input.value);
+    // Fonction améliorée pour mettre à jour la sélection visuelle
+    function updateSelection(suggestions) {
+      suggestions.forEach((li, index) => {
+        if (index === selectedIndex) {
+          li.classList.add("selected");
+          
+          // Amélioration du scroll - s'assurer que l'élément est toujours visible
+          const container = suggestionList;
+          const item = li;
+          
+          // Calculs améliorés pour la visibilité complète
+          const containerRect = container.getBoundingClientRect();
+          const itemRect = item.getBoundingClientRect();
+          
+          // Vérifier si l'élément est hors des limites visibles du container
+          if (itemRect.bottom > containerRect.bottom) {
+            // Si l'élément est trop bas, scroll vers le bas avec une marge plus grande
+            container.scrollTop += (itemRect.bottom - containerRect.bottom + 30);
+          } else if (itemRect.top < containerRect.top) {
+            // Si l'élément est trop haut, scroll vers le haut 
+            container.scrollTop -= (containerRect.top - itemRect.top + 15);
+          }
+          
+          // Traitement spécial pour le dernier élément de la liste
+          if (index === suggestions.length - 1) {
+            // Force le scroll jusqu'au bout pour le dernier élément
+            setTimeout(() => {
+              container.scrollTop = container.scrollHeight;
+            }, 10);
+          }
+        } else {
+          li.classList.remove("selected");
+        }
+      });
+      
+      if (selectedIndex >= 0) {
+        const selectedText = suggestions[selectedIndex].textContent.replace(/\s+/g, ' ').trim();
+        input.value = selectedText;
       }
+    }
+
+    // Ajouter un ajustement après l'affichage des suggestions
+    input.addEventListener("input", function() {
+      // Code existant...
+      
+      // Ajout: S'assurer que tous les éléments sont visibles après affichage
+      if (suggestionList.classList.contains("active")) {
+        setTimeout(() => {
+          // Ajuster la position du conteneur pour être sûr que tout est visible
+          const suggestionRect = suggestionList.getBoundingClientRect();
+          const viewportHeight = window.innerHeight;
+          
+          // Si la liste dépasse le bas de l'écran, ajuster le scroll
+          if (suggestionRect.bottom > viewportHeight) {
+            window.scrollBy({
+              top: Math.min(100, suggestionRect.bottom - viewportHeight + 20),
+              behavior: 'smooth'
+            });
+          }
+        }, 100);
+      }
+    });
+
+    // Assurer que la liste est correctement dimensionnée et positionnée
+    function adjustSuggestionList() {
+      if (suggestionList.classList.contains("active")) {
+        // S'assurer que la liste ne soit pas coupée par la fin du conteneur parent
+        const container = document.querySelector('.container');
+        const containerBottom = container.getBoundingClientRect().bottom;
+        const suggestionBottom = suggestionList.getBoundingClientRect().bottom;
+        
+        // Si nécessaire, permettre à la liste de déborder du conteneur
+        if (suggestionBottom > containerBottom) {
+          suggestionList.style.position = "absolute";
+          suggestionList.style.bottom = "auto";
+          
+          // Permettre un débordement du cadre si nécessaire
+          container.style.overflow = "visible";
+          
+          // Assurer que le menu ne disparaît pas au scroll
+          suggestionList.style.maxHeight = "280px";
+        }
+        
+        // Assurer que le dernier élément est visible
+        const lastItem = suggestionList.lastElementChild;
+        if (lastItem) {
+          // S'assurer que le dernier élément n'est pas coupé
+          const lastItemHeight = lastItem.offsetHeight;
+          suggestionList.style.paddingBottom = `${lastItemHeight / 2}px`;
+        }
+      }
+    }
+
+    // Appliquer l'ajustement après l'affichage des suggestions
+    suggestionList.addEventListener("transitionend", adjustSuggestionList);
+
+    // S'assurer que le menu déroulant est bien positionné après le chargement d'éléments
+    const observer = new MutationObserver(adjustSuggestionList);
+    observer.observe(suggestionList, { childList: true, subtree: true });
+
+    // Améliorer le comportement lors de l'ouverture des suggestions
+    input.addEventListener("focus", () => {
+      // Vérifier s'il y a du texte saisi pour afficher les suggestions immédiatement
+      if (input.value.length > 0) {
+        // Simuler un événement input pour afficher les suggestions
+        input.dispatchEvent(new Event('input'));
+      }
+    });
+
+    // Ajouter un comportement de redimensionnement pour s'assurer que le menu reste visible
+    window.addEventListener("resize", () => {
+      if (suggestionList.classList.contains("active")) {
+        // Repositionner la liste des suggestions après un redimensionnement
+        const inputRect = input.getBoundingClientRect();
+        suggestionList.style.width = inputRect.width + "px";
+      }
+    });
+
+    // Fermer les suggestions en cliquant ailleurs
+    document.addEventListener("click", (e) => {
+      if (e.target !== input && e.target !== suggestionList) {
+        suggestionList.classList.remove("active");
+      }
+    });
+
+    // Ne pas fermer les suggestions en cliquant dessus
+    suggestionList.addEventListener("click", (e) => {
+      e.stopPropagation();
+    });
+
+    // Ajouter ce code dans la section des écouteurs d'événements
+
+    // Récupérer l'élément d'icône de volume
+    const volumeIcon = document.querySelector('.volume-icon');
+
+    // Mettre à jour l'icône de volume en fonction du niveau
+    volumeSlider.addEventListener("input", () => {
+      audio.volume = volumeSlider.value;
+      
+      // Ne plus changer l'icône en fonction du niveau
+    });
+
+    // Initialiser l'icône au chargement
+    window.addEventListener("load", () => {
+      // Assurer que l'icône de volume est toujours 🔊
+      volumeIcon.textContent = '🔊';
     });
 
     newRound();

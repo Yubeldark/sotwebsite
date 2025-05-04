@@ -101,75 +101,158 @@ p {
   opacity: 0.9;
 }
 
+.search-container {
+  position: relative;
+  width: 85%;
+  margin: 0 auto 40px; /* Augmenter l'espace en dessous pour accommoder le débordement */
+  z-index: 10; /* S'assurer que le conteneur est au-dessus des autres éléments */
+}
+
 input[type="text"] {
   padding: 12px 18px;
-  width: 85%;
+  width: 100%;
   font-size: 1.1rem;
   font-family: 'Spectral', serif;
   border-radius: 8px;
-  border: 2px solid rgba(255,255,255,0.1);
+  border: 2px solid rgba(255,255,255,0.2);
   margin: 15px 0;
   text-align: center;
   background-color: rgba(255, 255, 255, 0.9);
   box-shadow: 0 4px 8px rgba(0,0,0,0.2);
   transition: all 0.3s ease;
   color: #333;
+  position: relative;
 }
 
 input[type="text"]:focus {
   outline: none;
   border-color: var(--primary-color);
-  box-shadow: 0 0 0 2px rgba(0, 168, 255, 0.3);
+  box-shadow: 0 0 0 3px rgba(0, 168, 255, 0.2);
+  border-radius: 8px 8px 0 0;
 }
 
+input[type="text"] + .suggestion-indicator {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(0, 0, 0, 0.4);
+  pointer-events: none;
+  transition: all 0.3s ease;
+}
+
+input[type="text"]:focus + .suggestion-indicator {
+  color: var(--primary-color);
+}
+
+/* Améliorations du style pour le menu déroulant */
 #suggestionList {
   list-style: none;
   padding: 0;
   margin: 0 auto;
   width: 85%;
-  background-color: white;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  background-color: rgba(22, 33, 45, 0.95);
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
   max-height: 0;
+  overflow-y: auto;
+  z-index: 1000; /* Valeur très élevée pour garantir l'affichage par-dessus */
+  transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+              opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   opacity: 0;
-  transition: max-height 0.4s ease-out, opacity 0.3s ease-out;
+  backdrop-filter: blur(5px);
+  scrollbar-width: thin;
+  scrollbar-color: var(--scroll-thumb) rgba(241, 241, 241, 0.2);
+  padding-bottom: 10px; /* Ajout de padding en bas pour éviter la coupure */
+  overflow: visible; /* Permettre le débordement si nécessaire */
 }
 
 #suggestionList.active {
-  max-height: 200px;
+  max-height: 280px; /* Hauteur augmentée */
   opacity: 1;
+  overflow-y: auto; /* Conserver le scroll mais autoriser le débordement */
 }
 
+/* Style des éléments de suggestion avec meilleure marge et effet de survol */
+#suggestionList li {
+  padding: 12px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: var(--text-light);
+  font-size: 1rem;
+  display: block;
+  margin-bottom: 2px;
+}
+
+/* Effet de survol amélioré sur les suggestions */
+#suggestionList li:hover {
+  background-color: rgba(255, 193, 7, 0.3);
+  color: var(--secondary-color);
+  padding-left: 25px;
+  border-left: 3px solid var(--secondary-color);
+}
+
+/* Style pour la suggestion sélectionnée */
+#suggestionList li.selected {
+  background-color: rgba(255, 193, 7, 0.3);
+  color: var(--secondary-color);
+  border-left: 3px solid var(--secondary-color);
+}
+
+/* Style pour les lettres mises en surbrillance dans les suggestions - sans soulignement */
+#suggestionList li strong {
+  color: var(--secondary-color);
+  font-weight: bold;
+  text-decoration: none; /* Supprimer le soulignement */
+}
+
+/* Ajout d'un effet de focus visuel quand la suggestion est survolée */
+#suggestionList li:hover strong {
+  color: #ffffff;
+  text-shadow: 0 0 5px var(--secondary-color);
+}
+
+/* S'assurer que le dropdown reste visible */
+.search-container #suggestionList {
+  max-height: 250px;
+  overflow-y: auto;
+  position: absolute;
+  width: 100%;
+  top: 100%; /* Position exacte sous l'input */
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* Animation pour l'apparition des suggestions - fixer les coordonnées */
+@keyframes slideDown {
+  from { transform: translateY(-5px) translateX(-50%); opacity: 0; }
+  to { transform: translateY(0) translateX(-50%); opacity: 1; }
+}
+
+/* Améliorer la visibilité du scrollbar */
 #suggestionList::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
+  height: 8px;
 }
 
 #suggestionList::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 3px;
+  background: rgba(30, 40, 50, 0.5);
+  border-radius: 4px;
 }
 
 #suggestionList::-webkit-scrollbar-thumb {
   background-color: var(--scroll-thumb);
-  border-radius: 3px;
+  border-radius: 4px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
 }
 
-#suggestionList li {
-  padding: 10px 15px;
-  border-bottom: 1px solid #eee;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-  color: #333;
-}
-
-#suggestionList li:last-child {
-  border-bottom: none;
-}
-
-#suggestionList li:hover {
+#suggestionList::-webkit-scrollbar-thumb:hover {
   background-color: var(--secondary-color);
-  color: #000;
 }
 
 button {
@@ -263,10 +346,12 @@ progress::-webkit-progress-value {
 }
 
 #timeDisplay {
-  color: rgba(255,255,255,0.7);
+  color: rgba(255,255,255,0.9);
   font-size: 1rem;
   margin: 10px 0;
   font-family: 'Spectral', serif;
+  font-weight: 600;
+  letter-spacing: 1px;
 }
 
 #feedback {
@@ -307,6 +392,169 @@ progress::-webkit-progress-value {
 
 #feedback.error {
   color: var(--wrong-color);
+}
+
+/* Styles pour les contrôles audio */
+.audio-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  margin: 15px 0;
+  flex-wrap: wrap;
+}
+
+/* Conteneur pour le contrôle de volume */
+.volume-control {
+  display: flex;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.2);
+  padding: 5px 15px;
+  border-radius: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.volume-control:hover {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+/* Style pour l'icône de volume (fixe maintenant) */
+.volume-icon {
+  font-size: 1.2rem;
+  margin-right: 10px;
+  color: var(--text-light);
+  user-select: none;
+}
+
+/* Style amélioré pour le slider de volume avec taille augmentée */
+#volumeSlider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 120px; /* Augmenté de 80px à 120px */
+  height: 6px; /* Légèrement plus épais */
+  background: rgba(255, 255, 255, 0.3);
+  outline: none;
+  border-radius: 5px;
+  transition: all 0.2s;
+}
+
+#volumeSlider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px; /* Légèrement plus grand */
+  height: 18px; /* Légèrement plus grand */
+  border-radius: 50%;
+  background: var(--secondary-color);
+  cursor: pointer;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+#volumeSlider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--secondary-color);
+  cursor: pointer;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+#volumeSlider:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+/* Style spécifique pour le bouton stop */
+#stopBtn {
+  background-color: #e53935; /* Rouge pour le bouton stop */
+}
+
+#stopBtn:hover {
+  background-color: #c62828; /* Rouge plus foncé au survol */
+}
+
+/* Ajuster les boutons pour qu'ils aient la même taille */
+#playBtn, #stopBtn {
+  min-width: 120px;
+}
+
+/* Conteneur pour le contrôle de volume */
+.volume-control {
+  display: flex;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.2);
+  padding: 5px 10px;
+  border-radius: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.volume-control:hover {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+/* Style pour l'icône de volume */
+.volume-icon {
+  font-size: 1.2rem;
+  margin-right: 8px;
+  color: var(--text-light);
+  user-select: none;
+}
+
+/* Style amélioré pour le slider de volume */
+#volumeSlider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 80px;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.3);
+  outline: none;
+  border-radius: 5px;
+  transition: all 0.2s;
+}
+
+#volumeSlider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: var(--secondary-color);
+  cursor: pointer;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+#volumeSlider::-moz-range-thumb {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: var(--secondary-color);
+  cursor: pointer;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+#volumeSlider:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+/* Responsive design pour les contrôles audio */
+@media (max-width: 600px) {
+  .audio-controls {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .volume-control {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  #volumeSlider {
+    width: 120px;
+  }
 }
 
 /* Responsive design */
