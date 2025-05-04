@@ -13,6 +13,16 @@
     <h1>🎵 Musique pirate</h1>
     <p>Devine la musique avec un extrait !</p>
 
+    <!-- Sélecteur de langue -->
+    <div class="language-selector">
+      <button class="language-button active" data-lang="fr">
+        <img src="../images/flag-fr.png" alt="Français" class="flag-icon">
+      </button>
+      <button class="language-button" data-lang="en">
+        <img src="../images/flag-en.png" alt="English" class="flag-icon">
+      </button>
+    </div>
+
     <!-- Mise à jour des contrôles audio avec icône de volume -->
     <div class="audio-controls">
       <button id="playBtn">▶️ Écouter</button>
@@ -401,12 +411,18 @@
       
       progress.value = 0;
       progress.max = maxTime;
-      playBtn.innerHTML = "▶️ Écouter";
+      
+      // Utiliser la traduction correcte pour le bouton play
+      playBtn.textContent = translations[currentLang].play;
       
       // Réinitialiser la liste des suggestions déjà utilisées pour cette manche
       usedSuggestions = [];
+      
+      // S'assurer que le streak est affiché dans la bonne langue
+      streakDisplay.textContent = translations[currentLang].streak.replace('%count%', streak);
     }
 
+    // Modification de la fonction checkAnswer pour prendre en compte la langue actuelle
     function checkAnswer(guess) {
       if (!guess || guessed) return;
 
@@ -419,13 +435,13 @@
       attempts++;
 
       if (isCorrect) {
-        feedback.textContent = "✅ Bonne réponse !";
+        feedback.textContent = translations[currentLang].good_answer;
         feedback.style.color = "lime";
         guessed = true;
         streak++;
         setTimeout(newRound, 2000);
       } else {
-        feedback.textContent = `❌ Faux (${attempts}/3)`;
+        feedback.textContent = translations[currentLang].wrong_answer.replace('%attempts%', attempts);
         feedback.style.color = "crimson";
         maxTime = Math.min(maxTime + 5, 15);
         
@@ -434,14 +450,16 @@
         timeDisplay.textContent = `${formatTime(audio.currentTime)} / ${formatTime(maxTime)}`;
         
         if (attempts >= 3) {
-          feedback.textContent = "💀 Perdu ! Réponse : " + chosen.title;
+          feedback.textContent = translations[currentLang].lost.replace('%answer%', chosen.title);
           input.disabled = true;
           streak = 0;
           setTimeout(newRound, 3000);
         }
       }
 
-      streakDisplay.textContent = `Série : ${streak}`;
+      // Utiliser la traduction correcte pour le streak
+      streakDisplay.textContent = translations[currentLang].streak.replace('%count%', streak);
+      
       input.value = "";
       suggestionList.innerHTML = "";
       suggestionList.classList.remove("active");
@@ -451,7 +469,7 @@
       audio.volume = volumeSlider.value;
     });
 
-    // Ajouter l'événement pour le bouton play
+    // Modifier l'événement du bouton play pour utiliser la traduction
     playBtn.addEventListener("click", () => {
       if (audio.paused) {
         // Si l'audio était en pause et que la position est au maximum, le remettre à zéro
@@ -461,7 +479,7 @@
         }
         
         audio.play();
-        playBtn.innerHTML = "⏸️ Pause";
+        playBtn.textContent = translations[currentLang].pause;
         
         // Démarrer l'intervalle pour mettre à jour le temps et la progression
         interval = setInterval(() => {
@@ -477,7 +495,7 @@
           if (currentTime >= maxTime) {
             audio.pause();
             clearInterval(interval);
-            playBtn.innerHTML = "▶️ Écouter";
+            playBtn.textContent = translations[currentLang].play;
             
             // Réinitialiser la position audio mais conserver la position visuelle de la barre de progression
             // pour indiquer que l'extrait est terminé
@@ -489,23 +507,23 @@
         // Si l'audio est en train de jouer, on le met en pause
         audio.pause();
         clearInterval(interval);
-        playBtn.innerHTML = "▶️ Écouter";
+        playBtn.textContent = translations[currentLang].play;
       }
     });
 
-    // Ajouter l'événement pour le bouton stop
+    // Modifier l'événement du bouton stop pour utiliser la traduction
     stopBtn.addEventListener("click", () => {
       audio.pause();
       audio.currentTime = 0; // Remettre le son au début
       clearInterval(interval);
-      playBtn.innerHTML = "▶️ Écouter";
+      playBtn.textContent = translations[currentLang].play;
       progress.value = 0;
       timeDisplay.textContent = `00:00 / ${formatTime(maxTime)}`;
     });
 
-    // Ajouter cet événement pour réinitialiser le bouton quand l'audio se termine
+    // Modifier l'événement "ended" pour utiliser la traduction
     audio.addEventListener("ended", () => {
-      playBtn.innerHTML = "▶️ Écouter";
+      playBtn.textContent = translations[currentLang].play;
       clearInterval(interval);
       progress.value = 0;
       timeDisplay.textContent = `00:00 / ${formatTime(maxTime)}`;
@@ -513,7 +531,7 @@
 
     // Ajouter cet événement pour réinitialiser le bouton quand l'audio se termine naturellement
     audio.addEventListener("ended", () => {
-      playBtn.innerHTML = "▶️ Écouter";
+      playBtn.textContent = translations[currentLang].play;
       clearInterval(interval);
       
       // On ne réinitialise pas progress.value ici pour montrer que l'extrait a été écouté
@@ -809,6 +827,85 @@
       // Assurer que l'icône de volume est toujours 🔊
       volumeIcon.textContent = '🔊';
     });
+
+    // Gestion des langues
+    const translations = {
+      'fr': {
+        'title': '🎵 Musique pirate',
+        'subtitle': 'Devine la musique avec un extrait !',
+        'play': '▶️ Écouter',
+        'pause': '⏸️ Pause',
+        'stop': '⏹️ Stop',
+        'input_placeholder': 'Entrez un titre...',
+        'good_answer': '✅ Bonne réponse !',
+        'wrong_answer': '❌ Faux (%attempts%/3)',
+        'lost': '💀 Perdu ! Réponse : %answer%',
+        'streak': 'Série : %count%'
+      },
+      'en': {
+        'title': '🎵 Pirate Music',
+        'subtitle': 'Guess the music from a short clip!',
+        'play': '▶️ Play',
+        'pause': '⏸️ Pause',
+        'stop': '⏹️ Stop',
+        'input_placeholder': 'Enter a title...',
+        'good_answer': '✅ Correct!',
+        'wrong_answer': '❌ Wrong (%attempts%/3)',
+        'lost': '💀 Lost! Answer: %answer%',
+        'streak': 'Streak: %count%'
+      }
+    };
+
+    let currentLang = 'fr';
+
+    // Fonction pour mettre à jour tous les textes selon la langue choisie
+    function updateLanguage(lang) {
+      currentLang = lang;
+      
+      // Mettre à jour les éléments HTML avec les traductions
+      document.querySelector('h1').textContent = translations[lang].title;
+      document.querySelector('p').textContent = translations[lang].subtitle;
+      playBtn.textContent = audio.paused ? translations[lang].play : translations[lang].pause;
+      stopBtn.textContent = translations[lang].stop;
+      input.placeholder = translations[lang].input_placeholder;
+      
+      // Mettre à jour le streak
+      streakDisplay.textContent = translations[lang].streak.replace('%count%', streak);
+      
+      // Mettre à jour le message de feedback s'il existe
+      if (feedback.textContent) {
+        if (guessed) {
+          feedback.textContent = translations[lang].good_answer;
+        } else if (attempts > 0) {
+          if (attempts >= 3) {
+            feedback.textContent = translations[lang].lost.replace('%answer%', chosen.title);
+          } else {
+            feedback.textContent = translations[lang].wrong_answer.replace('%attempts%', attempts);
+          }
+        }
+      }
+      
+      // Mettre à jour la classe active du bouton
+      document.querySelectorAll('.language-button').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.lang === lang);
+      });
+      
+      // Sauvegarder la préférence de langue
+      localStorage.setItem('preferred-language', lang);
+    }
+
+    // Ajouter les écouteurs d'événements aux boutons de langue
+    document.querySelectorAll('.language-button').forEach(button => {
+      button.addEventListener('click', () => {
+        updateLanguage(button.dataset.lang);
+      });
+    });
+
+    // Charger la préférence de langue si elle existe
+    const savedLang = localStorage.getItem('preferred-language');
+    if (savedLang) {
+      updateLanguage(savedLang);
+    }
 
     newRound();
   </script>
