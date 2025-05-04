@@ -1,62 +1,434 @@
 <!DOCTYPE html>
 <html lang="fr">
-  <head>
+<head>
     <meta charset="UTF-8" />
-    <title>SOT DLE - Mini jeux quotidiens Sea of Thieves</title>
-    <link rel="stylesheet" href="home.css" />
-    <link rel="icon" href="images/favicon.ico" type="image/x-icon" />
-    <script src="js/language.js"></script>
-  </head>
-  <body>
-    <!-- Image de fond ajoutée directement comme élément HTML -->
-    <div class="background-image"></div>
-    
-    <div class="main-container">
-      <div class="language-selector">
-        <a href="#" class="language-option active" data-lang="fr">
-          <img src="images/flag-fr.png" alt="Français" class="flag-icon">
-        </a>
-        <a href="#" class="language-option" data-lang="en">
-          <img src="images/flag-en.png" alt="English" class="flag-icon">
-        </a>
-      </div>
-      
-      <a href="index.html" title="Retour à l'accueil">
-        <img src="images/logo_sotdle.png" alt="Logo SOTDLE" class="logo-sotdle">
-      </a>
-      <p class="subtitle">Mini-jeux quotidiens</p>
-      
-      <!-- Nouvelle structure avec des images cliquables et des logos -->
-      <div class="category-container">
-        <a href="phrase/" class="category-item">
-          <img src="images/categorie.png" alt="Fond catégorie" class="category-image">
-          <img src="images/icon_talk.png" alt="Logo Qui parle" class="category-logo">
-          <div class="category-title" data-i18n="title-quiparle">Qui parle ?</div>
-        </a>
-        
-        <a href="bateau/" class="category-item">
-          <img src="images/categorie.png" alt="Fond catégorie" class="category-image">
-          <img src="images/icon_skin.png" alt="Skin mystere" class="category-logo">
-          <div class="category-title" data-i18n="title-quelbateau">Quel bateau ?</div>
-        </a>
-        
-        <a href="ile/" class="category-item">
-          <img src="images/categorie.png" alt="Fond catégorie" class="category-image">
-          <img src="images/icon_blindtest.png" alt="Logo Île" class="category-logo">
-          <div class="category-title" data-i18n="title-quelilepirate">Quelle île pirate ?</div>
-        </a>
-        
-        <a href="armes/" class="category-item">
-          <img src="images/categorie.png" alt="Fond catégorie" class="category-image">
-          <img src="images/icon_isle.png" alt="Logo Armes" class="category-logo">
-          <div class="category-title" data-i18n="title-quellesarmes">Quelles armes ?</div>
-        </a>
-      </div>
-      
-      <!-- Votre liste de jeux originale (masquée par le CSS) -->
-      <div class="game-list">
-        <!-- ...existing code... -->
-      </div>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Qui parle ?</title>
+    <link rel="icon" type="image/png" href="images/wonda.png"/>
+    <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+    <div class="container">
+    <a href="../index.html">
+        <img src="../images/logo_sotdle.png" alt="Logo SOTDLE" class="site-logo"/>
+    </a>
+    <div class="language-selector">
+        <button class="language-btn active" data-lang="fr">
+            <img src="../images/flag-fr.png" alt="Français" class="flag-icon" />
+        </button>
+        <button class="language-btn" data-lang="en">
+            <img src="../images/flag-en.png" alt="English" class="flag-icon" />
+        </button>
     </div>
-  </body>
+        <h1>
+            <img src="../images/w_icon_talk.png" alt="Icône parler gauche" class="title-icon" />
+            <span id="title-text">Qui parle ?</span>
+            <img src="../images/w_icon_talk2.png" alt="Icône parler droite" class="title-icon" />
+        </h1>
+        <div class="quote-box">
+            <p class="quote" id="quote">"You break it, you buy it!"</p>
+        </div>
+        <div class="search-container">
+            <input type="text" id="guess" placeholder="Entrez un nom..." autocomplete="off" spellcheck="false" autocorrect="off"/>
+            <button class="validate-btn" onclick="checkAnswer()">Valider</button>
+        </div>
+        <div class="suggestions" id="suggestions"></div>
+        <button id="next-btn" onclick="nextQuestion()" style="display: none;">Suivant</button>
+        <p class="result" id="result"></p>
+        <div class="wrong-answers-container" style="display: none;">
+            <div class="wrong-answers" id="wrong-answers"></div>
+        </div>
+        <div class="victory-popup" id="victoryPopup">
+            <div class="victory-content">
+                <h2 class="victory-title">Bravo !</h2>
+                <img src="" alt="Personnage" class="character-image" id="victoryImage">
+                <div class="character-name" id="victoryName"></div>
+                <div class="character-quote" id="victoryQuote"></div>
+                <button class="next-btn-popup" onclick="closeVictoryAndNext()">Suivant</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    const characters = [
+        { name: "Adelrick", quote: "", image: "../images/Adelrick.png" },
+        { name: "Aifrick", quote: "", image: "../images/Aifrick.png" },
+        { name: "Angelica", quote: "", image: "../images/Angelica.png" },
+        { name: "Annick", quote: "", image: "../images/Annick.png" },
+        { name: "Archibald", quote: "", image: "../images/Archibald.png" },
+        { name: "Barnaby", quote: "", image: "../images/Barnaby.png" },
+        { name: "Captain Capsize", quote: "", image: "../images/captain_capsize.png" },
+        { name: "Larinna", quote: "I've got work for someone of your… talents.", image: "../images/larinna.png" },
+        { name: "Merrick", quote: "I've lost my legs twice. Once to a shark, and once to grog.", image: "../images/derrick.png" },
+        { name: "The Mysterious Stranger", quote: "You're not the first to seek the secrets of the Sea of Thieves.", image: "../images/mysterious_stranger.png" }
+    ];
+
+    const charactersWithQuotes = characters.filter(char => char.quote && char.quote.trim() !== "");
+
+    const lockedImage = "images/ps-locked-item.png";
+    const guessInput = document.getElementById("guess");
+    const suggestionsContainer = document.getElementById("suggestions");
+    const resultBox = document.getElementById("result");
+    const quoteBox = document.getElementById("quote");
+    const wrongAnswers = new Set();
+    const wrongAnswersList = document.getElementById("wrong-answers");
+
+    let index;
+    let current;
+
+    // Modifier l'objet translations pour inclure les citations des personnages
+    const translations = {
+        fr: {
+            title: "Qui parle ?",
+            placeholder: "Entrez un nom...",
+            validateBtn: "Valider",
+            nextBtn: "Suivant",
+            congratsTitle: "Bravo !",
+            nextBtnPopup: "Suivant",
+            quotes: {
+                "Larinna": "J'ai du travail pour quelqu'un avec tes... talents.",
+                "Merrick": "J'ai perdu mes jambes deux fois. Une fois à cause d'un requin, et une fois à cause du grog.",
+                "The Mysterious Stranger": "Tu n'es pas le premier à chercher les secrets de la Mer des Voleurs."
+            }
+        },
+        en: {
+            title: "Who's talking?",
+            placeholder: "Enter a name...",
+            validateBtn: "Validate",
+            nextBtn: "Next",
+            congratsTitle: "Well done!",
+            nextBtnPopup: "Next",
+            quotes: {
+                "Larinna": "I've got work for someone of your… talents.",
+                "Merrick": "I've lost my legs twice. Once to a shark, and once to grog.",
+                "The Mysterious Stranger": "You're not the first to seek the secrets of the Sea of Thieves."
+            }
+        }
+    };
+
+    function selectRandomCharacter() {
+        if (charactersWithQuotes.length === 0) {
+            quoteBox.textContent = "Aucune citation disponible.";
+            return false;
+        }
+        
+        const randomIndex = Math.floor(Math.random() * charactersWithQuotes.length);
+        current = charactersWithQuotes[randomIndex];
+        index = characters.findIndex(char => char.name === current.name);
+        
+        const currentLang = localStorage.getItem('sotdleLanguage') || 'fr';
+        const translatedQuote = translations[currentLang].quotes[current.name] || current.quote;
+        
+        quoteBox.textContent = `"${translatedQuote}"`;
+        return true;
+    }
+
+    selectRandomCharacter();
+
+    guessInput.addEventListener("focus", () => {
+        const input = guessInput.value.trim().toLowerCase();
+        
+        // Toujours vider les suggestions précédentes
+        suggestionsContainer.innerHTML = "";
+        
+        if (input !== "") {
+            suggestionsContainer.style.display = "block";
+            showSuggestions(input);
+        }
+    });
+
+    guessInput.addEventListener("input", () => {
+        const input = guessInput.value.trim().toLowerCase();
+        
+        suggestionsContainer.innerHTML = "";
+        
+        if (input === "") {
+            suggestionsContainer.style.display = "none";
+            return;
+        }
+        
+        suggestionsContainer.style.display = "block";
+        showSuggestions(input);
+        
+        updateWrongAnswersPosition();
+    });
+
+    function showSuggestions(input) {
+        characters.forEach(char => {
+            if (char.name.toLowerCase().startsWith(input)) {
+                const suggestion = document.createElement("div");
+                suggestion.className = "suggestion";
+                
+                const imgContainer = document.createElement("div");
+                imgContainer.className = "img-container";
+                
+                const img = document.createElement("img");
+                img.src = char.image;
+                img.alt = char.name;
+                imgContainer.appendChild(img);
+                
+                const span = document.createElement("span");
+                span.textContent = char.name;
+                
+                suggestion.appendChild(imgContainer);
+                suggestion.appendChild(span);
+                
+                suggestion.addEventListener("click", () => {
+                    guessInput.value = char.name;
+                    suggestionsContainer.innerHTML = "";
+                    suggestionsContainer.style.display = "none";
+                });
+                
+                suggestionsContainer.appendChild(suggestion);
+            }
+        });
+    }
+
+    document.addEventListener("click", (e) => {
+        if (e.target !== guessInput && !suggestionsContainer.contains(e.target)) {
+            suggestionsContainer.style.display = "none";
+        }
+    });
+
+    // Fonction pour afficher le pop-up de victoire
+    function showVictoryPopup() {
+        const popup = document.getElementById("victoryPopup");
+        const victoryImage = document.getElementById("victoryImage");
+        const victoryName = document.getElementById("victoryName");
+        const victoryQuote = document.getElementById("victoryQuote");
+        
+        const currentLang = localStorage.getItem('sotdleLanguage') || 'fr';
+        const translatedQuote = translations[currentLang].quotes[current.name] || current.quote;
+        
+        // Définir les informations du personnage deviné
+        victoryImage.src = current.image;
+        victoryName.textContent = current.name;
+        victoryQuote.textContent = `"${translatedQuote}"`;
+        
+        // Ajouter la classe show pour déclencher l'animation
+        setTimeout(() => {
+            popup.classList.add("show");
+        }, 300);
+        
+        // Créer l'effet confetti
+        createConfetti();
+    }
+
+    // Fonction pour fermer le popup et passer à la question suivante
+    function closeVictoryAndNext() {
+        const popup = document.getElementById("victoryPopup");
+        popup.classList.remove("show");
+        
+        // Passer à la question suivante après la fermeture de l'animation
+        setTimeout(nextQuestion, 400);
+    }
+
+    // Fonction pour créer des confettis animés
+    function createConfetti() {
+        const container = document.getElementById("victoryPopup");
+        const confettiColors = ['#f0b800', '#ffcc33', '#4caf50', '#e91e63', '#2196f3', '#ff9800'];
+        
+        // Créer 50 confettis
+        for (let i = 0; i < 50; i++) {
+            const confetti = document.createElement('div');
+            confetti.classList.add('confetti-piece');
+            
+            // Style aléatoire pour chaque confetti
+            const color = confettiColors[Math.floor(Math.random() * confettiColors.length)];
+            confetti.style.backgroundColor = color;
+            confetti.style.left = `${Math.random() * 100}%`;
+            
+            // Animation avec délai aléatoire
+            confetti.style.animation = `confetti-fall ${1 + Math.random() * 2}s forwards`;
+            confetti.style.animationDelay = `${Math.random() * 3}s`;
+            
+            // Rotation et taille aléatoires
+            confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+            confetti.style.width = `${5 + Math.random() * 10}px`;
+            confetti.style.height = `${10 + Math.random() * 15}px`;
+            
+            container.appendChild(confetti);
+            
+            // Supprimer le confetti après l'animation
+            setTimeout(() => {
+                container.removeChild(confetti);
+            }, 5000);
+        }
+    }
+
+    function checkAnswer() {
+        const guess = guessInput.value.trim();
+        
+        if (guess.toLowerCase() === current.name.toLowerCase()) {
+            // Supprimer l'affichage du message "Bonne réponse!"
+            resultBox.textContent = ""; // Vider le contenu du message
+            resultBox.className = "result"; // Retirer la classe "correct"
+            
+            // Désactiver l'input et le vider
+            guessInput.disabled = true;
+            guessInput.value = "";
+            guessInput.placeholder = "Cliquez sur Suivant";
+            
+            // Cacher les suggestions s'il y en a
+            suggestionsContainer.innerHTML = "";
+            suggestionsContainer.style.display = "none";
+            
+            // Afficher directement le popup de victoire
+            setTimeout(showVictoryPopup, 300);
+        } else {
+            resultBox.className = "result"; // Cacher le message "Mauvaise réponse"
+            
+            // Ajouter à l'historique des mauvaises réponses si pas déjà présent
+            if (guess && !wrongAnswers.has(guess)) {
+                wrongAnswers.add(guess);
+                
+                // Afficher la zone d'erreurs si c'est la première erreur
+                const wrongAnswersContainer = document.querySelector(".wrong-answers-container");
+                if (wrongAnswers.size === 1) {
+                    wrongAnswersContainer.style.display = "block";
+                }
+                
+                // Créer l'élément de mauvaise réponse
+                const wrongAnswerElem = document.createElement('div');
+                wrongAnswerElem.className = 'wrong-answer';
+                
+                // Créer un conteneur pour l'image
+                const imgContainer = document.createElement("div");
+                imgContainer.className = "img-container";
+                
+                // Chercher l'image correspondante ou utiliser une image par défaut
+                let matchingChar = characters.find(c => c.name.toLowerCase() === guess.toLowerCase());
+                
+                // Ajouter l'image au conteneur
+                const img = document.createElement("img");
+                img.src = matchingChar ? matchingChar.image : lockedImage;
+                img.alt = guess;
+                imgContainer.appendChild(img);
+                
+                // Ajouter le texte
+                const span = document.createElement("span");
+                span.textContent = guess;
+                
+                // Assembler le tout
+                wrongAnswerElem.appendChild(imgContainer);
+                wrongAnswerElem.appendChild(span);
+                
+                // Insérer au début de la liste pour que les plus récentes soient en haut
+                if (wrongAnswersList.firstChild) {
+                    wrongAnswersList.insertBefore(wrongAnswerElem, wrongAnswersList.firstChild);
+                } else {
+                    wrongAnswersList.appendChild(wrongAnswerElem);
+                }
+            }
+            
+            guessInput.value = "";
+            
+            // Mettre à jour la position après avoir ajouté une mauvaise réponse
+            updateWrongAnswersPosition();
+        }
+    }
+    
+    function nextQuestion() {
+        let previousCharacter = current;
+        
+        if (charactersWithQuotes.length > 1) {
+            do {
+                selectRandomCharacter();
+            } while (current.name === previousCharacter.name);
+        } else {
+            selectRandomCharacter();
+        }
+        
+        guessInput.disabled = false;
+        guessInput.value = "";
+        guessInput.placeholder = "Entrez un nom...";
+        guessInput.classList.remove("disabled");
+        resultBox.textContent = "";
+        
+        document.getElementById("next-btn").style.display = "none";
+        
+        suggestionsContainer.innerHTML = "";
+
+        wrongAnswers.clear();
+        wrongAnswersList.innerHTML = "";
+        
+        document.querySelector(".wrong-answers-container").style.display = "none";
+    }
+
+    function launchConfetti() {
+        const confetti = document.createElement("div");
+        confetti.className = "confetti";
+        confetti.innerHTML = "<h2>Félicitations !</h2>";
+        document.body.appendChild(confetti);
+        setTimeout(() => confetti.remove(), 4000);
+    }
+
+    function updateWrongAnswersPosition() {
+        const suggestionsContainer = document.getElementById("suggestions");
+        const wrongAnswersContainer = document.querySelector(".wrong-answers-container");
+        const suggestionsVisible = suggestionsContainer.children.length > 0;
+        
+        let topPosition = 485 + 60;
+        
+        if (suggestionsVisible) {
+            setTimeout(() => {
+                const suggestionsHeight = suggestionsContainer.offsetHeight;
+                wrongAnswersContainer.style.top = (485 + suggestionsHeight + 10) + "px";
+            }, 10);
+        } else {
+            wrongAnswersContainer.style.top = topPosition + "px";
+        }
+    }
+
+    const observer = new MutationObserver(updateWrongAnswersPosition);
+    observer.observe(document.getElementById("suggestions"), { childList: true, subtree: true });
+
+    document.addEventListener("DOMContentLoaded", updateWrongAnswersPosition);
+
+    // Fonction pour changer la langue
+    function changeLanguage(lang) {
+        // Mettre à jour les classes actives des boutons
+        document.querySelectorAll('.language-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        document.querySelector(`.language-btn[data-lang="${lang}"]`).classList.add('active');
+        
+        // Mettre à jour les textes de l'interface
+        document.getElementById('title-text').textContent = translations[lang].title;
+        document.getElementById('guess').placeholder = translations[lang].placeholder;
+        document.querySelector('.validate-btn').textContent = translations[lang].validateBtn;
+        document.getElementById('next-btn').textContent = translations[lang].nextBtn;
+        document.querySelector('.victory-title').textContent = translations[lang].congratsTitle;
+        document.querySelector('.next-btn-popup').textContent = translations[lang].nextBtnPopup;
+        
+        // Mettre à jour la citation en cours si elle existe
+        if (current && current.name) {
+            const translatedQuote = translations[lang].quotes[current.name];
+            if (translatedQuote) {
+                document.getElementById('quote').textContent = `"${translatedQuote}"`;
+                
+                // Mettre à jour aussi la citation dans le popup de victoire si visible
+                const victoryQuote = document.getElementById('victoryQuote');
+                if (victoryQuote && victoryPopup.classList.contains('show')) {
+                    victoryQuote.textContent = `"${translatedQuote}"`;
+                }
+            }
+        }
+        
+        // Sauvegarder la préférence de langue
+        localStorage.setItem('sotdleLanguage', lang);
+    }
+
+    // Ajouter des écouteurs d'événements aux boutons de langue
+    document.querySelectorAll('.language-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            changeLanguage(btn.getAttribute('data-lang'));
+        });
+    });
+
+    // Charger la langue précédemment sélectionnée ou utiliser le français par défaut
+    const savedLanguage = localStorage.getItem('sotdleLanguage') || 'fr';
+    changeLanguage(savedLanguage);
+    </script>
+</body>
 </html>
