@@ -17,9 +17,11 @@
     <h1>🎨 Quel skin ?</h1>
     <p>Devine le skin mystère en utilisant les indices de chaque tentative !</p>
     
-    <select id="skinInput">
-      <option disabled selected>Choisir un skin...</option>
-    </select>
+    <!-- Remplacer le select par un input et une liste de suggestions -->
+    <div class="search-container">
+      <input type="text" id="skinInput" placeholder="Entrez un nom de skin..." autocomplete="off">
+      <ul id="suggestionList"></ul>
+    </div>
     
     <table id="guessTable">
       <thead>
@@ -28,7 +30,7 @@
           <th>Catégorie</th>
           <th>Sous-catégorie</th>
           <th>Couleur</th>
-          <th>Date</th>
+          <th>Date d'apparition</th>
           <th>Obtention</th>
           <th>Monnaie</th>
           <th>Image</th>
@@ -109,7 +111,7 @@
         categorie: "Malle d'accessoires",
         sousCategorie: "Malédiction",
         couleur: ["Rouge"],
-        date: "2020",
+        date: "Heart of Fire",
         obtention: "Promotion",
         prix: "-",
         image: "../images/ashencurse.png"
@@ -119,7 +121,7 @@
         categorie: "Malle d'accessoires",
         sousCategorie: "Barbe",
         couleur: ["Bleu"],
-        date: "2020",
+        date: "Festival of Giving 2020",
         obtention: "Twitch Drops",
         prix: "-",
         image: "../images/barbegel.png"
@@ -199,7 +201,7 @@
         categorie: "Personnalisation de bateau",
         sousCategorie: "Canon",
         couleur: ["Bleu"],
-        date: "2019",
+        date: "Seabound Soul",
         obtention: "Shop",
         prix: "Gold",
         image: "../images/canontsd.png"
@@ -223,7 +225,207 @@
         obtention: "Pirate Emporium",
         prix: "Pièces Anciennes",
         image: "../images/forest.png"
-      }
+      },
+      "Voiles d'avant-garde": {
+        nom: "Voiles d'avant-garde",
+        categorie: "Personnalisation de bateau",
+        sousCategorie: "Voile",
+        couleur: ["Blanc", "Gris"],
+        date: "Bêta",
+        obtention: "Code",
+        prix: "-",
+        image: "../images/betasail.png"
+      },
+      "Figure de proue de l’Affamé": {
+        nom: "Figure de proue de l’Affamé",
+        categorie: "Personnalisation de bateau",
+        sousCategorie: "Figure de proue",
+        couleur: ["Bleu", "Blanc"],
+        date: "The Hungering Deep",
+        obtention: "Récompense",
+        prix: "-",
+        image: "../images/affame.png"
+      },
+      "Cache-oeil des 1000 jours": {
+        nom: "Cache-oeil des 1000 jours",
+        categorie: "Malle d'accessoires",
+        sousCategorie: "Cache-oeil",
+        couleur: ["Noir", "Jaune"],
+        date: "Festival of Giving 2020",
+        obtention: "Récompense",
+        prix: "-",
+        image: "../images/goldenpatch.png"
+      },
+      "Figure de proue de désosseur": {
+        nom: "Figure de proue de désosseur",
+        categorie: "Personnalisation de bateau",
+        sousCategorie: "Figure de proue",
+        couleur: ["Blanc"],
+        date: "Cursed Sails",
+        obtention: "Shop",
+        prix: "Doublons",
+        image: "../images/prouedes.png"
+      },
+      "Cabestan de Mercenaire": {
+        nom: "Cabestan de Mercenaire",
+        categorie: "Personnalisation de bateau",
+        sousCategorie: "Cabestan",
+        couleur: ["Vert", "Doré", "Bordeaux"],
+        date: "Mercenary Voyages",
+        obtention: "Shop",
+        prix: "Doublons",
+        image: "../images/mercecapstan.png"
+      },
+      "Pavillon de désosseur": {
+        nom: "Pavillon de désosseur",
+        categorie: "Personnalisation de bateau",
+        sousCategorie: "Pavillon de navire",
+        couleur: ["Blanc", "Rouge"],
+        date: "Cursed Sails",
+        obtention: "Shop",
+        prix: "Doublons",
+        image: "../images/flagdes.png"
+      },
+      "Arquebuse à mire des cendres du Forsaken": {
+        nom: "Arquebuse à mire des cendres du Forsaken",
+        categorie: "Armurerie",
+        sousCategorie: "Arquebuse à mire",
+        couleur: ["Gris", "Orange"],
+        date: "Forsaken Shores",
+        obtention: "Shop",
+        prix: "Doublons",
+        image: "../images/snipefors.png"
+      },
+      "Voiles des cendres de Forsaken": {
+        nom: "Voiles des cendres de Forsaken",
+        categorie: "Personnalisation de bateau",
+        sousCategorie: "Voile",
+        couleur: ["Orange", "Noir", "Marron"],
+        date: "Forsaken Shores",
+        obtention: "Shop",
+        prix: "Doublons",
+        image: "../images/voilefors.png"
+      },
+      "Barre des coquillages funestes": {
+        nom: "Barre des coquillages funestes",
+        categorie: "Personnalisation de bateau",
+        sousCategorie: "Barre",
+        couleur: ["Bleu", "Gris"],
+        date: "Shrouded Spoils",
+        obtention: "Shop",
+        prix: "Doublons",
+        image: "../images/barrebleu.png"
+      }, 
+      "Canons des coquillages funestes": {
+        nom: "Canons des coquillages funestes",
+        categorie: "Personnalisation de bateau",
+        sousCategorie: "Cannon",
+        couleur: ["Bleu", "Gris"],
+        date: "Shrouded Spoils",
+        obtention: "Shop",
+        prix: "Doublons",
+        image: "../images/cannonbleu.png"
+      },
+      "Vielle à roue de l'Azure Scout": {
+        nom: "Vielle à roue de l'Azure Scout",
+        categorie: "Coffre d'équipements",
+        sousCategorie: "Vielle à roue",
+        couleur: ["Bleu"],
+        date: "Saison 15",
+        obtention: "Shop",
+        prix: "Gold",
+        image: "../images/azurviel.png"
+      },
+      "Banjo des damnés": {
+        nom: "Banjo des damnés",
+        categorie: "Coffre d'équipements",
+        sousCategorie: "Banjo",
+        couleur: ["Vert"],
+        date: "Saison 3",
+        obtention: "Promotion",
+        prix: "-",
+        image: "../images/banjodamn.png"
+      },
+      "Accordéon du Phénix d'or": {
+        nom: "Accordéon du Phénix d'or",
+        categorie: "Coffre d'équipements",
+        sousCategorie: "Accordéon",
+        couleur: ["Blanc", "Jaune"],
+        date: "Saison 1",
+        obtention: "Twitch Drops",
+        prix: "-",
+        image: "../images/gilacc.png"
+      },
+      "Éclat de canon orange": {
+        nom: "Éclat de canon orange",
+        categorie: "Personnalisation de bateau",
+        sousCategorie: "Éclat de canon",
+        couleur: ["Orange"],
+        date: "Festival of Giving 2020",
+        obtention: "Shop",
+        prix: "Gold",
+        image: "../images/orangeeclat.png"
+      },
+      "Tapis de désosseur d'obsidienne": {
+        nom: "Tapis de désosseur d'obsidienne",
+        categorie: "Décoration de navire",
+        sousCategorie: "Tapis",
+        couleur: ["Noir", "Rouge"],
+        date: "Saison 13",
+        obtention: "Shop",
+        prix: "Gold",
+        image: "../images/obsirug.png"
+      },
+      "Blason de navire du Phénix d'or": {
+        nom: "Blason de navire du Phénix d'or",
+        categorie: "Décoration de navire",
+        sousCategorie: "Armoiries",
+        couleur: ["Blanc", "Doré", "Bleu"],
+        date: "Saison 14",
+        obtention: "Giveaway",
+        prix: "-",
+        image: "../images/gilcre.png"
+      },
+      "Coque de mercenaire": {
+        nom: "Coque de mercenaire",
+        categorie: "Personnalisation de bateau",
+        sousCategorie: "Coque",
+        couleur: ["Blanc", "Bordeau", "Vert"],
+        date: "Mercenary Voyages",
+        obtention: "Shop",
+        prix: "Doublon",
+        image: "../images/coquemerc.png"
+      },
+      "Canne à pêche prise courageuse": {
+        nom: "Canne à pêche prise courageuse",
+        categorie: "Coffre d'équipements",
+        sousCategorie: "Canne à pêche",
+        couleur: ["Vert", "Bleu"],
+        date: "Saison 15",
+        obtention: "Récompense",
+        prix: "-",
+        image: "../images/canevent.png"
+      },
+      "Pelle de l'ambassadeur marchand": {
+        nom: "Pelle de l'ambassadeur marchand",
+        categorie: "Coffre d'équipements",
+        sousCategorie: "Pelle",
+        couleur: ["Bleu", "Jaune"],
+        date: "Saison 10",
+        obtention: "Récompense",
+        prix: "-",
+        image: "../images/pellemarch.png"
+      },
+      "Chapeau de Loup de mer splendide": {
+        nom: "Chapeau de Loup de mer splendide",
+        categorie: "Coffre de vêtements",
+        sousCategorie: "Chapeau",
+        couleur: ["Rouge", "Bleu", "Doré"],
+        date: "Anniversary Update",
+        obtention: "Shop",
+        prix: "Gold",
+        image: "../images/splendidchap.png"
+      },
     };
 
     // Nombre maximum de tentatives
@@ -242,6 +444,7 @@
     let correctSkin = skins[correctName];
 
     const input = document.getElementById("skinInput");
+    const suggestionList = document.getElementById("suggestionList");
     const tbody = document.querySelector("#guessTable tbody");
     const feedback = document.getElementById("feedback");
     const attemptsDisplay = document.getElementById("attempts");
@@ -252,12 +455,6 @@
 
     // Trier les noms de skin par ordre alphabétique
     const sortedSkinNames = Object.keys(skins).sort();
-    sortedSkinNames.forEach(name => {
-      const option = document.createElement("option");
-      option.value = name;
-      option.textContent = name;
-      input.appendChild(option);
-    });
 
     // Fonction pour réinitialiser le jeu
     function resetGame() {
@@ -277,7 +474,7 @@
       
       // Réinitialiser l'interface
       input.disabled = false;
-      input.value = "Choisir un skin...";
+      input.value = '';
       attemptsDisplay.textContent = `Tentative: 0/${MAX_ATTEMPTS}`;
       attemptsDisplay.classList.remove('warning', 'danger');
       
@@ -292,11 +489,6 @@
           container.parentNode.removeChild(container);
         }
       });
-
-      // Réactiver toutes les options du menu déroulant
-      Array.from(input.options).forEach(option => {
-        option.disabled = false;
-      });
     }
 
     // Gestionnaire d'événement pour le bouton de réinitialisation
@@ -309,8 +501,8 @@
       if (thead.children.length === 0) {
         const headerRow = document.createElement("tr");
         
-        // Changer "Prix" par "Monnaie" dans les en-têtes
-        const headers = ["Nom", "Catégorie", "Sous-catégorie", "Couleur", "Date", "Obtention", "Monnaie", "Image"];
+        // Changer "Date" par "Date d'apparition" dans les en-têtes
+        const headers = ["Nom", "Catégorie", "Sous-catégorie", "Couleur", "Date d'apparition", "Obtention", "Monnaie", "Image"];
         
         headers.forEach(headerText => {
           const th = document.createElement("th");
@@ -328,13 +520,21 @@
       const dateOrder = [
         "Bêta",
         "Lancement",
-        "2018",
-        "Anniversary",
-        "2019",
+        "The Hungering Deep",
+        "Cursed Sails",
+        "Forsaken Shores",
+        "Shrouded Spoils",
+        "Mercenary Voyages",
+        "Anniversary Update",
         "Fort of the Damned",
-        "2020",
+        "Seabound Soul",
+        "Crews of Rage",
+        "Heart of Fire",
         "Ships of Fortune",
-        "2021",
+        "Haunted Shores", 
+        "Ashen Winds",
+        "Vaults of the Ancients",
+        "Festival of Giving 2020", 
         "Saison 1",
         "Saison 2",
         "Saison 3",
@@ -359,26 +559,64 @@
       return index === -1 ? 999 : index;
     }
 
-    // Modifier la portion du code qui gère le changement de sélection pour ajouter l'image à chaque fois
-    input.addEventListener("change", () => {
+    // Fonction pour filtrer les suggestions basées sur l'entrée
+    function updateSuggestions(inputValue) {
+      // Vider la liste de suggestions
+      suggestionList.innerHTML = '';
+      
+      // Montrer les suggestions seulement si au moins 1 caractère est tapé (au lieu de 2)
+      if (inputValue.length < 1) {
+        suggestionList.classList.remove('active');
+        return;
+      }
+      
+      // Filtrer les noms de skin qui commencent par l'entrée (insensible à la casse)
+      const inputLower = inputValue.toLowerCase();
+      const filteredSkins = sortedSkinNames.filter(skin => 
+        skin.toLowerCase().startsWith(inputLower) && // Filtre pour les noms qui commencent par les lettres tapées
+        !guessedSkins.includes(skin)
+      );
+      
+      if (filteredSkins.length === 0) {
+        suggestionList.classList.remove('active');
+        return;
+      }
+      
+      // Ajouter jusqu'à 5 suggestions
+      const maxSuggestions = Math.min(5, filteredSkins.length);
+      for (let i = 0; i < maxSuggestions; i++) {
+        const li = document.createElement('li');
+        
+        // Mettre en évidence les caractères correspondant à la recherche
+        const skinName = filteredSkins[i];
+        const highlightedName = `<strong>${skinName.substring(0, inputValue.length)}</strong>${skinName.substring(inputValue.length)}`;
+        li.innerHTML = highlightedName;
+        
+        // Gérer le clic sur une suggestion
+        li.addEventListener('click', function() {
+          input.value = skinName; // Utiliser le texte sans balises HTML
+          suggestionList.classList.remove('active');
+          checkAnswer(skinName);
+        });
+        
+        suggestionList.appendChild(li);
+      }
+      
+      suggestionList.classList.add('active');
+    }
+
+    // Fonction pour vérifier la réponse
+    function checkAnswer(guess) {
       if (gameOver) return;
       
-      const guess = input.value;
       if (!guess || !skins[guess] || guessedSkins.includes(guess)) {
-        input.value = "Choisir un skin...";
+        input.value = '';
         return;
       }
 
       // Ajouter le skin à la liste des skins devinés
       guessedSkins.push(guess);
       
-      // Désactiver l'option dans le menu déroulant
-      Array.from(input.options).forEach(option => {
-        if (option.value === guess) {
-          option.disabled = true;
-        }
-      });
-
       attempts++;
       
       // Mettre à jour l'affichage des tentatives
@@ -488,7 +726,119 @@
         resetButton.classList.add("show"); // Ajouter show pour l'animation
       }
       
-      input.value = "Choisir un skin...";
+      input.value = '';
+    }
+
+    // Ajoutez cette variable pour suivre l'indice de sélection actuel
+    let selectedSuggestionIndex = -1;
+
+    // Modifier l'événement keydown pour ajouter la navigation clavier
+    input.addEventListener('keydown', function(e) {
+      // Navigation dans les suggestions avec les flèches haut/bas
+      if (suggestionList.classList.contains('active')) {
+        const suggestions = suggestionList.querySelectorAll('li');
+        
+        // Flèche bas : sélectionner la suggestion suivante
+        if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          selectedSuggestionIndex = Math.min(selectedSuggestionIndex + 1, suggestions.length - 1);
+          updateSelectedSuggestion(suggestions);
+        }
+        
+        // Flèche haut : sélectionner la suggestion précédente
+        else if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          selectedSuggestionIndex = Math.max(selectedSuggestionIndex - 1, -1);
+          updateSelectedSuggestion(suggestions);
+        }
+        
+        // Entrée : sélectionner la suggestion actuelle ou vérifier la réponse exacte
+        else if (e.key === 'Enter') {
+          if (selectedSuggestionIndex >= 0 && selectedSuggestionIndex < suggestions.length) {
+            // Utiliser la suggestion sélectionnée
+            const selectedText = suggestions[selectedSuggestionIndex].textContent;
+            input.value = selectedText;
+            checkAnswer(selectedText);
+            suggestionList.classList.remove('active');
+            selectedSuggestionIndex = -1;
+          } else if (this.value.trim() !== '') {
+            // Vérifier si la réponse exacte existe
+            const exactMatch = sortedSkinNames.find(
+              skin => skin.toLowerCase() === this.value.toLowerCase()
+            );
+            
+            if (exactMatch) {
+              checkAnswer(exactMatch);
+            }
+            
+            suggestionList.classList.remove('active');
+          }
+        }
+        
+        // Échap : fermer la liste de suggestions
+        else if (e.key === 'Escape') {
+          suggestionList.classList.remove('active');
+          selectedSuggestionIndex = -1;
+        }
+      }
+    });
+
+    // Fonction pour mettre à jour la suggestion sélectionnée visuellement
+    function updateSelectedSuggestion(suggestions) {
+      // Supprimer la classe selected de toutes les suggestions
+      suggestions.forEach(s => s.classList.remove('selected'));
+      
+      // Si une suggestion est sélectionnée, lui ajouter la classe selected
+      if (selectedSuggestionIndex >= 0) {
+        suggestions[selectedSuggestionIndex].classList.add('selected');
+        // Faire défiler pour que l'élément sélectionné soit visible
+        suggestions[selectedSuggestionIndex].scrollIntoView({ block: 'nearest' });
+      } else {
+        // Si aucune suggestion n'est sélectionnée, remettre la valeur d'origine dans l'input
+        input.value = input.getAttribute('data-original-value') || input.value;
+      }
+    }
+
+    // Modifier la fonction input pour sauvegarder la valeur originale
+    input.addEventListener('input', function() {
+      // Sauvegarder la valeur originale
+      this.setAttribute('data-original-value', this.value);
+      selectedSuggestionIndex = -1;
+      updateSuggestions(this.value);
+    });
+
+    // Écouter les événements de saisie sur l'input
+    input.addEventListener('input', function() {
+      updateSuggestions(this.value);
+    });
+
+    // Écouter les événements de touche dans l'input
+    input.addEventListener('keydown', function(e) {
+      // Si la touche Entrée est appuyée et qu'il y a une valeur dans l'input
+      if (e.key === 'Enter' && this.value.trim() !== '') {
+        // Si une seule suggestion est disponible, la sélectionner automatiquement
+        if (suggestionList.children.length === 1) {
+          checkAnswer(suggestionList.children[0].textContent);
+        } else {
+          // Vérifier si la réponse exacte existe
+          const exactMatch = sortedSkinNames.find(
+            skin => skin.toLowerCase() === this.value.toLowerCase()
+          );
+          
+          if (exactMatch) {
+            checkAnswer(exactMatch);
+          }
+        }
+        
+        suggestionList.classList.remove('active');
+      }
+    });
+
+    // Cacher les suggestions quand on clique ailleurs
+    document.addEventListener('click', function(e) {
+      if (e.target !== input && e.target !== suggestionList) {
+        suggestionList.classList.remove('active');
+      }
     });
   </script>
 </body>
