@@ -29,8 +29,13 @@
             <p class="quote" id="quote">"You break it, you buy it!"</p>
         </div>
         <div class="search-container">
-            <input type="text" id="guess" placeholder="Entrez un nom..." autocomplete="off" spellcheck="false" autocorrect="off"/>
-            <button class="validate-btn" onclick="checkAnswer()">Valider</button>
+            <input type="text" id="guess-input" placeholder="Entrez votre réponse...">
+            <button class="validate-btn">Valider</button>
+            <button class="reveal-btn">Reveal</button>
+        </div>
+        <!-- Ajouter ce div pour afficher la réponse révélée -->
+        <div class="revealed-answer">
+            <span id="answer-text">Nom du personnage</span>
         </div>
         <div class="suggestions" id="suggestions"></div>
         <button id="next-btn" onclick="nextQuestion()" style="display: none;">Suivant</button>
@@ -47,6 +52,17 @@
                 <button class="next-btn-popup" onclick="closeVictoryAndNext()">Suivant</button>
             </div>
         </div>
+
+        <!-- Nouveau pop-up de révélation -->
+        <div class="reveal-popup" id="revealPopup">
+            <div class="reveal-content">
+                <h2 class="reveal-title">Réponse</h2>
+                <img src="" alt="Personnage" class="character-image" id="revealImage">
+                <div class="character-name" id="revealName"></div>
+                <div class="character-quote" id="revealQuote"></div>
+                <button class="next-btn-popup" onclick="closeRevealAndNext()">Suivant</button>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -58,15 +74,52 @@
         { name: "Archibald", quote: "", image: "../images/archibald.png" },
         { name: "Barnaby", quote: "", image: "../images/barnaby.png" },
         { name: "Captain Capsize", quote: "", image: "../images/captain_capsize.png" },
-        { name: "Larinna", quote: "I've got work for someone of your… talents.", image: "../images/larinna.png" },
+        { name: "Larinna", quote: "Hey! You'd better be on your guard, pirate. The seas are even more dangerous now with Flameheart and new sea creatures abroad", image: "../images/larinna.png" },
         { name: "Merrick", quote: "I've lost my legs twice. Once to a shark, and once to grog.", image: "../images/derrick.png" },
-        { name: "The Mysterious Stranger", quote: "You're not the first to seek the secrets of the Sea of Thieves.", image: "../images/mysterious_stranger.png" }
+        { name: "The Mysterious Stranger", quote: "Hardly. Let's just say I arrived on the Sea of Thieves under... unusual circumstances", image: "../images/mysterious_stranger.png" },
+        { name: "Henry", quote: "It's the key to our fortune, and to a lesser extent, yours too.", image: "../images/henry.png" },
+        { name: "Oksana", quote: "We are so much more than simple card turners and charlatan ball gazers.", image: "../images/oksana.png" },
+        { name: "Earnest", quote: "Our pets are healthy and happy creatures, plus we sell outfits to make them match your legendary style.", image: "../images/earnest.png" },
+        { name: "Olivia", quote: "In life, Briggsy was a flamboyant adventurer who thrivied on danger and excitement", image: "../images/olivia.png" },
+        { name: "Tasha", quote: "She used to drink here, in my tavern! When she was alive, I mean.", image: "../images/tasha.png" },
+        { name: "Sudds", quote: "So many secret stars...", image: "../images/sudds.png" },
+        { name: "Olive", quote: "They've even asked me to officiate their wedding! It's such am honour", image: "../images/olive.png" },
+        { name: "Wonda", quote: "I know a thing or two about the Sea of Thieves, and I know a thing or two about you.", image: "../images/wonda.png" },
+        { name: "Salty", quote: "Grade A traps for treasure and tombs, squawk! Fully guaranteed!", image: "../images/salty.png" },
+        { name: "Ferryman", quote: "Now go! First, seek my sarcophagus, for my greatest treasure still lies within", image: "../images/ferryman.png" },
+        { name: "Sandra", quote: "You know, that uniform looks better on you than it ever did on me", image: "../images/sandra.png" },
+        { name: "Gold Hoarder", quote: "Flesh is weak... Gold is strong...", image: "../images/goldhoarder.png" },
+        { name: "Grace", quote: "Years ago, I used the Shroudbreaker and was the first to reach the Devil's Roar and founded this outpost", image: "../images/grace.png" },
+        { name: "Lookout", quote: "Y'whuh? A ship, you say? Ooh, this could be serious!", image: "../images/look1st.png" },
+        { name: "Otis", quote: "I... I don't believe it! Freedom, after all these years... The smell of the sea, the touch of the moonlight...", image: "../images/otis.png" },
+        { name: "Murray", quote: "If you can get me a new body, I could pretend to be one of them and speak you into Threepwood's place", image: "../images/murray.png" },
+        { name: "Guybrush", quote: "Would you be QUIET? My wife is SLEEPING!", image: "../images/guybrush.png" },
+        { name: "CHEF", quote: "YOU'RE FIRED!", image: "../images/chef.png" },
+        { name: "Storekeeper", quote: "Welcome back, fancy-pants! I hope you brought more money than last time", image: "../images/storekeeper.png" },
+        { name: "Corina", quote: "Return to the waters you call homoe. When Guybrush is ready to begin his journey, I shall make certain you are at this side...", image: "../images/corina.png" },
+        { name: "Meathook", quote: "Aaaaaieeeeeeeeee! D-Don't just stand there, get it in back the cage and shut the door!", image: "../images/meathook.png" },
+        { name: "Stan", quote: "What was that loud splashing sound? Why can I smeel saltwater? And why do I feel seasick?", image: "../images/stan.png" },
+        { name: "Captain Smirk", quote: "Just want you to know, I don't do this with just anyone. But I'm gonna put you up against... THE LEGENDARY MACHINE", image: "../images/captainsmirk.png" },
+        { name: "Herman", quote: "Now look, you made me drop my key. Leave the trap alone, you're only making things worse!", image: "../images/herman.png" },
+        { name: "Lechuck", quote: "Elaine and I are meant to be together!", image: "../images/lechuck.png" },
+        { name: "Siren Queen", quote: "Hear me, my daughter, and come forth! Come forth and FEAST!", image: "../images/sirenqueen.png" },
+        { name: "The Castaway", quote: "if Davy Jones is not stopped, this world will sink into shadow", image: "../images/castaway.png" },
+        { name: "Cursed Captain", quote: "If ye can hunt down me mutinous crew and find the key to me cage...", image: "../images/cursedcaptain.png" },
+        { name: "Jack Sparrow", quote: "The Reaper's Hideout... Not much of a hideout if you put in on the map, eh?", image: "../images/jacksparrow.png" },
+        { name: "Davy Jones", quote: "BY JACK SPARRRRRRRRRAHHHH...", image: "../images/davyjones.png" },
+        { name: "Captain Briggsy", quote: "Use your sword. Use your gun. Use a banana! I don't care! Just get tha Skull to me!", image: "../images/briggsy.png" },
+        { name: "Stitcher Jim", quote: "MY arm... It's burning... What have you done to me?! Aaaaaahhhh!", image: "../images/stitcherjim.png" },
+        { name: "Flameheart", quote: "Free! At! LAST!", image: "../images/flameheart.png" },
+        { name: "Voice of the Flame", quote: "Your loyal service to the flame has been noticed...", image: "../images/voiceflame.png" },
+        { name: "Servant of the Flame", quote: "We are a noble company of pirates who embrace and encourage the true freedom that the Sea of Thieves can offer.", image: "../images/servant.png" },
+        { name: "The Servant", quote: "You are not ready to face the truth. You are not ready to face the truth.", image: "../images/servant.png" },
+        { name: "Spiffy", quote: "Woof! A-roof ruff-ruff! Woof-woof arooo...", image: "../images/spiffy.png" }
     ];
 
     const charactersWithQuotes = characters.filter(char => char.quote && char.quote.trim() !== "");
 
     const lockedImage = "images/ps-locked-item.png";
-    const guessInput = document.getElementById("guess");
+    const guessInput = document.getElementById("guess-input");
     const suggestionsContainer = document.getElementById("suggestions");
     const resultBox = document.getElementById("result");
     const quoteBox = document.getElementById("quote");
@@ -123,36 +176,6 @@
         return true;
     }
 
-    selectRandomCharacter();
-
-    guessInput.addEventListener("focus", () => {
-        const input = guessInput.value.trim().toLowerCase();
-        
-        // Toujours vider les suggestions précédentes
-        suggestionsContainer.innerHTML = "";
-        
-        if (input !== "") {
-            suggestionsContainer.style.display = "block";
-            showSuggestions(input);
-        }
-    });
-
-    guessInput.addEventListener("input", () => {
-        const input = guessInput.value.trim().toLowerCase();
-        
-        suggestionsContainer.innerHTML = "";
-        
-        if (input === "") {
-            suggestionsContainer.style.display = "none";
-            return;
-        }
-        
-        suggestionsContainer.style.display = "block";
-        showSuggestions(input);
-        
-        updateWrongAnswersPosition();
-    });
-
     function showSuggestions(input) {
         characters.forEach(char => {
             if (char.name.toLowerCase().startsWith(input)) {
@@ -187,6 +210,37 @@
     document.addEventListener("click", (e) => {
         if (e.target !== guessInput && !suggestionsContainer.contains(e.target)) {
             suggestionsContainer.style.display = "none";
+        }
+    });
+
+    // Ajouter des écouteurs d'événements pour les suggestions
+    guessInput.addEventListener("input", function() {
+        const input = this.value.trim().toLowerCase();
+        
+        suggestionsContainer.innerHTML = "";
+        
+        if (input === "") {
+            suggestionsContainer.style.display = "none";
+            return;
+        }
+        
+        suggestionsContainer.style.display = "block";
+        showSuggestions(input);
+        
+        updateWrongAnswersPosition();
+    });
+
+    guessInput.addEventListener("focus", function() {
+        const input = this.value.trim().toLowerCase();
+        
+        // Réinitialiser les suggestions
+        suggestionsContainer.innerHTML = "";
+        
+        if (input !== "") {
+            // Afficher les suggestions basées sur la valeur actuelle
+            suggestionsContainer.style.display = "block";
+            showSuggestions(input);
+            updateWrongAnswersPosition();
         }
     });
 
@@ -256,11 +310,41 @@
         }
     }
 
+    // Fonction pour afficher le pop-up de révélation
+    function showRevealPopup() {
+        const popup = document.getElementById("revealPopup");
+        const revealImage = document.getElementById("revealImage");
+        const revealName = document.getElementById("revealName");
+        const revealQuote = document.getElementById("revealQuote");
+        
+        const currentLang = localStorage.getItem('sotdleLanguage') || 'fr';
+        const translatedQuote = translations[currentLang].quotes[current.name] || current.quote;
+        
+        // Définir les informations du personnage
+        revealImage.src = current.image;
+        revealName.textContent = current.name;
+        revealQuote.textContent = `"${translatedQuote}"`;
+        
+        // Ajouter la classe show pour déclencher l'animation
+        setTimeout(() => {
+            popup.classList.add("show");
+        }, 300);
+    }
+
+    // Fonction pour fermer le popup de révélation et passer à la question suivante
+    function closeRevealAndNext() {
+        const popup = document.getElementById("revealPopup");
+        popup.classList.remove("show");
+        
+        // Passer à la question suivante après la fermeture de l'animation
+        setTimeout(nextQuestion, 400);
+    }
+
     function checkAnswer() {
         const guess = guessInput.value.trim();
         
         if (guess.toLowerCase() === current.name.toLowerCase()) {
-            // Supprimer l'affichage du message "Bonne réponse!"
+            // Réponse correcte
             resultBox.textContent = ""; // Vider le contenu du message
             resultBox.className = "result"; // Retirer la classe "correct"
             
@@ -269,7 +353,7 @@
             guessInput.value = "";
             guessInput.placeholder = "Cliquez sur Suivant";
             
-            // Cacher les suggestions s'il y en a
+            // Cacher les suggestions
             suggestionsContainer.innerHTML = "";
             suggestionsContainer.style.display = "none";
             
@@ -353,6 +437,11 @@
         wrongAnswersList.innerHTML = "";
         
         document.querySelector(".wrong-answers-container").style.display = "none";
+        
+        // Réinitialiser le bouton reveal
+        document.querySelector('.reveal-btn').classList.remove('clicked');
+        document.querySelector('.reveal-btn').disabled = false;
+        document.querySelector('.validate-btn').disabled = false;
     }
 
     function launchConfetti() {
@@ -395,7 +484,7 @@
         
         // Mettre à jour les textes de l'interface
         document.getElementById('title-text').textContent = translations[lang].title;
-        document.getElementById('guess').placeholder = translations[lang].placeholder;
+        document.getElementById('guess-input').placeholder = translations[lang].placeholder;
         document.querySelector('.validate-btn').textContent = translations[lang].validateBtn;
         document.getElementById('next-btn').textContent = translations[lang].nextBtn;
         document.querySelector('.victory-title').textContent = translations[lang].congratsTitle;
@@ -429,6 +518,48 @@
     // Charger la langue précédemment sélectionnée ou utiliser le français par défaut
     const savedLanguage = localStorage.getItem('sotdleLanguage') || 'fr';
     changeLanguage(savedLanguage);
+
+    // Attendre que le DOM soit complètement chargé
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialiser toutes les fonctions et événements ici
+        init();
+    });
+
+    function init() {
+        // Le code existant de sélection de personnage et configuration d'interface
+        selectRandomCharacter();
+        
+        // Attacher explicitement les événements
+        document.querySelector('.validate-btn').addEventListener('click', checkAnswer);
+        document.querySelector('.reveal-btn').addEventListener('click', handleReveal);
+        guessInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkAnswer();
+            }
+        });
+        
+        // Autres initialisations
+        const savedLanguage = localStorage.getItem('sotdleLanguage') || 'fr';
+        changeLanguage(savedLanguage);
+    }
+    
+    function handleReveal() {
+        // Utiliser document.querySelector au lieu de this pour éviter les problèmes de contexte
+        const revealBtn = document.querySelector('.reveal-btn');
+        revealBtn.classList.add('clicked');
+        revealBtn.disabled = true;
+        
+        // Désactiver l'input et le bouton valider
+        document.getElementById('guess-input').disabled = true;
+        document.querySelector('.validate-btn').disabled = true;
+        
+        // Cacher les suggestions si elles sont affichées
+        suggestionsContainer.innerHTML = "";
+        suggestionsContainer.style.display = "none";
+        
+        // Afficher le popup de révélation
+        showRevealPopup();
+    }
     </script>
 </body>
 </html>
